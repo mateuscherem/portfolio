@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Sobre — Mateus Cherem</title>
+<meta name="description" content="Trajetória, formação e princípios de design de Mateus Cherem, Senior Product Designer em São Paulo." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/styles.css">
+<script>
+/* Applied before first paint so the page never flashes the wrong theme. */
+(function(){
+  try{
+    var d=document.documentElement;
+    var c=localStorage.getItem("mc_portfolio_contrast");
+    if(c==="1") d.classList.add("high-contrast");
+    if(c!==null) d.classList.add("contrast-user-set");
+    if(localStorage.getItem("mc_portfolio_textsize")==="1") d.style.setProperty("--font-scale","1.25");
+    var l=localStorage.getItem("mc_portfolio_lang");
+    if(l==="en") d.lang="en-US"; else if(l==="es") d.lang="es-ES";
+    d.classList.add("js");
+  }catch(e){ document.documentElement.classList.add("js"); }
+})();
+</script>
+</head>
+<body>
+
+<a href="#main-content" class="skip-link mono" data-i18n="a11ySkipLink">Pular para o conteúdo principal</a>
+
+<!-- Live region: every state change (contraste, narração, idioma) is announced here -->
+<div id="a11y-status" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></div>
+
+<header class="statusbar">
+  <div class="statusbar-inner">
+    <div class="status-left">
+      <span class="status-dot" aria-hidden="true"></span>
+      <a class="status-text mono" href="index.html" data-i18n="wordmark">Mateus Cherem — Senior Product Designer</a>
+    </div>
+    <div class="status-right">
+      <nav class="status-nav mono" id="main-nav" aria-label="Navegação principal">
+        <a href="index.html" data-i18n="navImpact">impacto</a>
+        <a href="cases.html" data-i18n="navCases">cases</a>
+        <a href="sobre.html" data-i18n="navAbout" aria-current="page">sobre</a>
+        <a href="mentorias.html" data-i18n="navMentorias">mentorias</a>
+        <a href="#contact" data-i18n="navContact">contato</a>
+      </nav>
+
+      <div class="a11y-toolbar" role="group" id="a11y-toolbar" aria-label="Ferramentas de acessibilidade">
+        <button type="button" id="contrast-btn" class="a11y-btn" aria-pressed="false" aria-label="Ativar alto contraste" title="Alto contraste">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 0 0 18z" fill="currentColor" stroke="none"/></svg>
+        </button>
+        <button type="button" id="textsize-btn" class="a11y-btn" aria-pressed="false" aria-label="Aumentar o tamanho do texto" title="Tamanho do texto">
+          <span class="glyph" aria-hidden="true">A+</span>
+        </button>
+        <div class="narrate-group">
+          <button type="button" id="narrate-btn" class="a11y-btn" aria-pressed="false" aria-label="Ouvir o conteúdo da página" title="Ouvir página">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M11 5 6 9H3v6h3l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/></svg>
+          </button>
+          <button type="button" id="narrate-stop-btn" class="a11y-btn" hidden aria-label="Parar narração" title="Parar narração">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="6" y="6" width="12" height="12" rx="1.5"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="lang-switch" role="group" aria-label="Seletor de idioma">
+        <button type="button" class="lang-btn" data-lang="pt" aria-pressed="true" aria-label="Mudar para Português"><span aria-hidden="true">🇧🇷</span> PT</button>
+        <button type="button" class="lang-btn" data-lang="en" aria-pressed="false" aria-label="Switch to English"><span aria-hidden="true">🇺🇸</span> EN</button>
+        <button type="button" class="lang-btn" data-lang="es" aria-pressed="false" aria-label="Cambiar a Español"><span aria-hidden="true">🇪🇸</span> ES</button>
+      </div>
+
+      <button type="button" class="menu-btn" id="menu-btn" aria-expanded="false" aria-controls="mobile-nav" aria-label="Abrir menu de navegação">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <nav class="mobile-nav" id="mobile-nav" aria-label="Navegação principal (mobile)">
+    <ul>
+      <li><a href="index.html" data-i18n="navImpact">impacto</a></li>
+      <li><a href="cases.html" data-i18n="navCases">cases</a></li>
+      <li><a href="sobre.html" data-i18n="navAbout" aria-current="page">sobre</a></li>
+      <li><a href="mentorias.html" data-i18n="navMentorias">mentorias</a></li>
+      <li><a href="#contact" data-i18n="navContact">contato</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main class="wrap" id="main-content" tabindex="-1">
+
+  <!-- ABOUT -->
+  <section id="about" aria-labelledby="about-heading">
+    <div class="section-head reveal">
+      <div>
+        <div class="section-tag mono">03 — <span data-i18n="sectionTagAbout">sobre</span></div>
+        <h1 id="about-heading" data-i18n="aboutHeading">Como eu penso design, times e produto</h1>
+      </div>
+    </div>
+
+    <div class="about-grid reveal">
+      <div>
+        <p data-i18n="aboutP1">Comecei em branding, na <strong>Neurona Marcas Inteligentes</strong>, entendendo como uma marca se traduz em experiência antes mesmo de virar interface. Isso ainda molda como eu penso produto hoje: toda decisão de UI carrega um posicionamento por trás, mesmo quando ninguém está olhando para isso diretamente.</p>
+        <p data-i18n="aboutP2">Passei pela <strong>4BIO Medicamentos Especiais</strong>, dentro do Grupo Raia Drogasil, ajudando a expandir novos negócios digitais junto com times de tecnologia. Hoje, no <strong>Sicoob</strong>, lidero projetos de ponta a ponta na área de Sistemas de Pagamentos e Ecossistemas Digitais — de pesquisa a protótipo validado, sempre em contato direto com PMs e POs.</p>
+        <p data-i18n="aboutP3">Estou cursando o <strong>MBA USP/Esalq em Gestão de Negócios Digitais e Inteligência Artificial</strong>, porque acho que o próximo salto de senioridade em design não vem só de UI mais refinada — vem de entender melhor o negócio e as ferramentas que estão mudando como produtos são construídos.</p>
+      </div>
+
+      <div class="principles">
+        <div class="principle">
+          <h4 data-i18n="principle1H">Design é decisão de negócio, não só de tela</h4>
+          <p data-i18n="principle1P">Uma interface bonita que não resolve a alçada de aprovação certa, ou não se encaixa na estratégia da marca, não é um bom design — é um mockup caro.</p>
+        </div>
+        <div class="principle">
+          <h4 data-i18n="principle2H">Sistema antes de tela</h4>
+          <p data-i18n="principle2P">Prefiro resolver o componente que se repete cem vezes do que a tela única e bonita. É onde a consistência — e a velocidade do time — realmente se ganha.</p>
+        </div>
+        <div class="principle">
+          <h4 data-i18n="principle3H">Perto de quem decide</h4>
+          <p data-i18n="principle3P">Prototipar rápido só importa se a decisão certa acontecer com a pessoa certa na sala. Cultivo esse acesso deliberadamente, não como sorte de projeto.</p>
+        </div>
+        <div class="principle">
+          <h4 data-i18n="principle4H">Curadoria é liderança</h4>
+          <p data-i18n="principle4P">Manter um design system vivo é um trabalho de liderança silenciosa: dizer não a exceções, para que a exceção certa, quando chegar, ainda faça sentido.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="tracks reveal">
+      <div class="track">
+        <h3 data-i18n="trackExperience">Experiência profissional</h3>
+        <div class="timeline">
+          <div class="tl-row">
+            <div class="tl-when mono">2022—hoje</div>
+            <div class="tl-what">
+              <h4 data-i18n="tl2H">Sicoob Confederação — Senior Product Designer</h4>
+              <p data-i18n="tl2P">Adquirência, Sistemas de Pagamentos e Logística de Terminais</p>
+            </div>
+          </div>
+          <div class="tl-row">
+            <div class="tl-when mono">2020—2022</div>
+            <div class="tl-what">
+              <h4 data-i18n="tl3H">4BIO Medicamentos Especiais (Grupo Raia Drogasil) — Product Designer Pleno</h4>
+              <p data-i18n="tl3P">Branding e expansão de novos negócios digitais</p>
+            </div>
+          </div>
+          <div class="tl-row">
+            <div class="tl-when mono">2019—2020</div>
+            <div class="tl-what">
+              <h4 data-i18n="tl4H">Neurona Marcas Inteligentes — Designer Jr.</h4>
+              <p data-i18n="tl4P">São Paulo e região</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="track">
+        <h3 data-i18n="trackEducation">Formação</h3>
+        <div class="timeline">
+          <div class="tl-row">
+            <div class="tl-when mono">2025—2027</div>
+            <div class="tl-what">
+              <h4 data-i18n="tl1H">MBA USP/Esalq — Gestão de Negócios Digitais e IA</h4>
+              <p data-i18n="tl1P">Em andamento</p>
+            </div>
+          </div>
+          <div class="tl-row">
+            <div class="tl-when mono">—</div>
+            <div class="tl-what">
+              <h4 data-i18n="tl6H">Ohio University — Strategic Marketing Management</h4>
+              <p data-i18n="tl6P">Certificação internacional</p>
+            </div>
+          </div>
+          <div class="tl-row">
+            <div class="tl-when mono">—</div>
+            <div class="tl-what">
+              <h4 data-i18n="tl7H">Ohio University — Business English</h4>
+              <p data-i18n="tl7P">Certificação internacional</p>
+            </div>
+          </div>
+          <div class="tl-row">
+            <div class="tl-when mono">2015—2018</div>
+            <div class="tl-what">
+              <h4 data-i18n="tl5H">IMT Mauá — Bacharelado em Design</h4>
+              <p data-i18n="tl5P">Instituto Mauá de Tecnologia</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+</main>
+
+<div class="wrap">
+  <!-- FOOTER -->
+  <footer id="contact">
+    <div class="footer-top reveal">
+      <h2 data-i18n="footerHeading">Um recorte do trabalho que venho fazendo em pagamentos, terminais e design systems.</h2>
+      <div class="footer-links mono">
+        <div class="contact-row">
+          <a href="mailto:cheremateus@gmail.com" aria-label="Enviar e-mail para cheremateus@gmail.com">cheremateus@gmail.com</a>
+          <button type="button" class="copy-btn" data-copy="cheremateus@gmail.com" aria-label="Copiar o e-mail cheremateus@gmail.com">copiar</button>
+        </div>
+        <div class="contact-row">
+          <a href="mailto:cherem@outlook.com.br" aria-label="Enviar e-mail para cherem@outlook.com.br">cherem@outlook.com.br</a>
+          <button type="button" class="copy-btn" data-copy="cherem@outlook.com.br" aria-label="Copiar o e-mail cherem@outlook.com.br">copiar</button>
+        </div>
+        <a href="https://www.linkedin.com/in/mateuscherem/" target="_blank" rel="noopener" aria-label="Abrir perfil do LinkedIn (nova aba)">linkedin.com/in/mateuscherem</a>
+        <a href="#" data-i18n="footerResume" aria-label="Baixar currículo em PDF">baixar currículo (pdf)</a>
+      </div>
+    </div>
+    <div class="footer-bottom mono">
+      <span data-i18n="footerCopyright">© 2026 Mateus Cherem</span>
+      <span data-i18n="footerLocation">São Paulo, Brasil</span>
+    </div>
+  </footer>
+</div>
+
+<script src="assets/app.js"></script>
+</body>
+</html>
