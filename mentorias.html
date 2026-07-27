@@ -1,0 +1,2751 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Mentorias — Mateus Cherem</title>
+<meta name="description" content="E-books curtos sobre design de produto, do básico ao avançado. Leia na tela ou ouça em áudio." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+     PALETTE — every value below was measured against its own
+     surface. Ratios are noted so future edits keep the floor.
+     Body copy targets WCAG AAA (7:1); micro-labels never drop
+     below AAA on the darkest card they sit on; control borders
+     meet 1.4.11 Non-text Contrast (3:1).
+     ============================================================ */
+  :root{
+    --bg: #0E0F11;
+    --bg-raised: #16171A;
+    --bg-card: #1B1D20;
+
+    --line: #2A2C30;         /* decorative rules only — never a control edge */
+    --line-soft: #212327;
+    --line-strong: #6E7178;  /* 3.9:1 on --bg — borders of real controls */
+
+    --text: #F2F0EA;         /* 16.8:1 on --bg */
+    --text-dim: #BCC1C7;     /* 10.4:1 on --bg · 9.2:1 on --bg-card */
+    --text-faint: #A6ACB4;   /*  8.4:1 on --bg · 7.4:1 on --bg-card */
+
+    --accent: #4CA492;       /*  6.4:1 on --bg — surfaces + large text */
+    --accent-bright: #7FD4C2;/* 11.1:1 on --bg — links, small accent text */
+    --accent-dim: rgba(76,164,146,0.18);
+    --accent-ink: #07100F;   /*  6.5:1 on --accent — text sitting on accent */
+
+    --statusbar-bg: rgba(14,15,17,0.90);
+    --radius: 3px;
+    --font-scale: 1;
+  }
+
+  /* ---------- MODO CLARO ----------
+     Mesma disciplina do escuro: cada valor medido contra a superfície
+     em que aparece. Corpo em AAA, bordas de controle acima de 3:1. */
+  :root.light{
+    --bg: #FAF9F6;
+    --bg-raised: #F2F0EA;
+    --bg-card: #EAE7DF;
+
+    --line: #DEDAD0;
+    --line-soft: #E7E4DB;
+    --line-strong: #807B6F;   /* 4,0:1 no fundo · 3,4:1 no card */
+
+    --text: #191917;          /* 16,7:1 */
+    --text-dim: #45443F;      /*  9,3:1 · 7,9:1 no card */
+    --text-faint: #4A4943;    /*  8,6:1 · 7,3:1 no card */
+
+    --accent: #2C6B5E;        /*  5,9:1 — superfícies e texto grande */
+    --accent-bright: #1E5347; /*  8,4:1 — links e texto pequeno */
+    --accent-dim: rgba(44,107,94,0.13);
+    --accent-ink: #FFFFFF;    /*  6,2:1 sobre o accent */
+
+    --statusbar-bg: rgba(250,249,246,0.92);
+    --scrim: rgba(250,249,246,0.96);
+    --shot-shadow: rgba(60,55,45,0.16);
+  }
+  :root{ --scrim: rgba(5,6,7,0.94); --shot-shadow: rgba(0,0,0,0.9); }
+
+  .light .terminal{ box-shadow:0 24px 48px -30px rgba(60,55,45,0.35); }
+  .light .shot .zoom{ background:rgba(25,25,23,0.78); color:#FFFFFF; }
+  .light .book-cover{ background:
+      radial-gradient(120% 140% at 12% 0%, color-mix(in srgb, var(--accent) 16%, transparent) 0%, transparent 62%),
+      var(--bg-card); }
+  /* O alto contraste vence os dois modos. */
+  .high-contrast, .high-contrast.light{ color-scheme:dark; }
+
+  /* ---------- HIGH CONTRAST MODE ---------- */
+  :root.high-contrast{
+    --bg:#000000;
+    --bg-raised:#000000;
+    --bg-card:#000000;
+    --line:#FFFFFF;
+    --line-soft:#FFFFFF;
+    --line-strong:#FFFFFF;
+    --text:#FFFFFF;
+    --text-dim:#FFFFFF;
+    --text-faint:#FFFFFF;
+    --accent:#FFD400;
+    --accent-bright:#FFEA00;
+    --accent-dim:rgba(255,212,0,0.28);
+    --accent-ink:#000000;
+    --statusbar-bg:#000000;
+  }
+  .high-contrast .statusbar{ backdrop-filter:none; border-bottom-width:2px; }
+  .high-contrast .btn-primary{ color:#000000; font-weight:700; }
+  .high-contrast a{ text-decoration:underline; text-underline-offset:3px; }
+  .high-contrast .status-nav a, .high-contrast .footer-links a, .high-contrast .status-text{ text-decoration:none; }
+  .high-contrast .status-nav a[aria-current="page"]{ text-decoration:underline; }
+  .high-contrast .status-nav a:hover, .high-contrast .footer-links a:hover{ text-decoration:underline; }
+  .high-contrast .terminal, .high-contrast .h-card, .high-contrast .minor-card, .high-contrast .case-tags span{ border:1px solid #FFFFFF; }
+  .high-contrast .status-dot{ background:#FFEA00; }
+  .high-contrast .principle{ border-left-color:#FFFFFF; }
+  .high-contrast ::selection{ background:#FFEA00; color:#000000; }
+  .high-contrast .is-narrating{ outline:2px dashed #FFEA00; }
+
+
+  /* Users who already asked their OS for more contrast get it on load. */
+  @media (prefers-contrast: more){
+    :root:not(.light):not(.contrast-user-set){ --text-dim:#E4E6E9; --text-faint:#D2D6DA; --line-strong:#9AA0A6; }
+    :root.light:not(.contrast-user-set){ --text-dim:#2C2B27; --text-faint:#33322D; --line-strong:#5F5A50; }
+  }
+
+  *{ margin:0; padding:0; box-sizing:border-box; }
+  html{ scroll-behavior:smooth; font-size:calc(100% * var(--font-scale)); }
+
+  @media (prefers-reduced-motion: reduce){
+    html{ scroll-behavior:auto; }
+    *{ animation-duration:0.01ms !important; transition-duration:0.01ms !important; }
+  }
+
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Inter', sans-serif;
+    font-size:1rem;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  h1,h2,h3, .display{ font-family:'Space Grotesk', sans-serif; letter-spacing:-0.02em; }
+  .mono{ font-family:'JetBrains Mono', monospace; letter-spacing:0.01em; }
+  a{ color:inherit; text-decoration:none; }
+  ::selection{ background:var(--accent); color:var(--accent-ink); }
+  :focus-visible{ outline:3px solid var(--accent-bright); outline-offset:3px; border-radius:2px; }
+  .high-contrast :focus-visible{ outline:3px solid #FFEA00; outline-offset:2px; }
+
+  .wrap{ max-width:1120px; margin:0 auto; padding:0 32px; }
+  @media (max-width:640px){ .wrap{ padding:0 20px; } }
+
+  /* ---------- STATUS BAR ---------- */
+  .statusbar{
+    position:sticky; top:0; z-index:50;
+    background:var(--statusbar-bg);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  .statusbar-inner{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:14px 32px; max-width:1120px; margin:0 auto; gap:16px;
+  }
+  @media (max-width:640px){ .statusbar-inner{ padding:14px 20px; } }
+
+  .status-left{ display:flex; align-items:center; gap:10px; min-width:0; }
+  .status-dot{
+    width:7px; height:7px; border-radius:50%;
+    background:var(--accent-bright);
+    animation:pulse 2.4s infinite; flex-shrink:0;
+  }
+  @keyframes pulse{
+    0%{ box-shadow:0 0 0 0 var(--accent-dim); }
+    70%{ box-shadow:0 0 0 7px transparent; }
+    100%{ box-shadow:0 0 0 0 transparent; }
+  }
+  .status-text{ font-size:0.7188rem; color:var(--text-dim); text-transform:uppercase; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  @media (max-width:560px){ .status-text{ font-size:0.625rem; max-width:150px; } }
+  @media (max-width:400px){ .status-text{ display:none; } }
+
+  .status-right{ display:flex; align-items:center; gap:26px; }
+  .status-nav{ display:flex; gap:28px; }
+  .status-nav a{ font-size:0.8125rem; color:var(--text-dim); transition:color .2s ease; }
+  .status-nav a:hover{ color:var(--text); }
+  .status-nav a[aria-current="page"]{ color:var(--accent-bright); }
+  .mobile-nav a[aria-current="page"]{ color:var(--accent-bright); }
+  .status-text{ text-decoration:none; }
+  a.status-text:hover{ color:var(--text); }
+  @media (max-width:800px){ .status-nav{ display:none; } }
+
+  .lang-switch{
+    display:flex; align-items:center; gap:2px;
+    border:1px solid var(--line-strong); border-radius:20px;
+    padding:3px;
+  }
+  .lang-btn{
+    font-family:'JetBrains Mono', monospace;
+    font-size:0.6875rem; letter-spacing:0.03em;
+    padding:6px 11px; border-radius:16px;
+    color:var(--text-dim);
+    background:transparent; border:none; cursor:pointer;
+    transition:background .2s ease, color .2s ease;
+    display:flex; align-items:center; gap:5px;
+  }
+  .lang-btn:hover{ color:var(--text); }
+  .lang-btn.active{ background:var(--accent-dim); color:var(--accent-bright); }
+
+  .skip-link{
+    position:absolute; left:12px; top:-60px;
+    background:var(--accent-bright); color:var(--accent-ink);
+    padding:12px 18px; border-radius:4px;
+    font-size:0.8125rem; font-weight:600;
+    z-index:200; transition:top .2s ease;
+  }
+  .skip-link:focus{ top:12px; }
+
+  .a11y-toolbar{ display:flex; align-items:center; gap:6px; }
+  .a11y-btn{
+    display:flex; align-items:center; justify-content:center;
+    width:32px; height:32px;
+    border:1px solid var(--line-strong); border-radius:50%;
+    background:transparent; color:var(--text-dim);
+    cursor:pointer; font-size:0.8125rem; line-height:1;
+    transition:background .2s ease, color .2s ease, border-color .2s ease;
+    flex-shrink:0;
+  }
+  .a11y-btn:hover{ color:var(--text); border-color:var(--text-dim); }
+  .a11y-btn[aria-pressed="true"]{ background:var(--accent-dim); color:var(--accent-bright); border-color:var(--accent); }
+  .a11y-btn.speaking{ animation:speak-pulse 1.2s ease-in-out infinite; }
+  @keyframes speak-pulse{
+    0%, 100%{ box-shadow:0 0 0 0 var(--accent-dim); }
+    50%{ box-shadow:0 0 0 5px var(--accent-dim); }
+  }
+  .a11y-btn svg{ width:16px; height:16px; fill:none; stroke:currentColor; stroke-width:1.7; stroke-linecap:round; stroke-linejoin:round; }
+  .a11y-btn .glyph{ font-family:'JetBrains Mono', monospace; font-size:0.6875rem; font-weight:500; }
+
+
+  /* ---------- SWITCH DE TEMA ---------- */
+  .theme-switch{
+    position:relative; flex-shrink:0;
+    width:56px; height:30px; padding:0;
+    border:1px solid var(--line-strong); border-radius:15px;
+    background:var(--bg-card); cursor:pointer;
+    transition:border-color .2s ease, background .2s ease;
+  }
+  .theme-switch:hover{ border-color:var(--text-dim); }
+  .theme-switch .track{ position:absolute; inset:0; display:block; }
+  .theme-switch svg{
+    position:absolute; top:50%; width:13px; height:13px;
+    transform:translateY(-50%);
+    fill:none; stroke:currentColor; stroke-width:1.9;
+    stroke-linecap:round; stroke-linejoin:round;
+    transition:color .2s ease, opacity .2s ease;
+  }
+  .theme-switch .tw-moon{ left:8px;  color:var(--accent-bright); }
+  .theme-switch .tw-sun{  right:8px; color:var(--text-faint); }
+  .theme-switch[aria-checked="true"] .tw-moon{ color:var(--text-faint); }
+  .theme-switch[aria-checked="true"] .tw-sun{  color:var(--accent-bright); }
+  .theme-switch .thumb{
+    position:absolute; top:3px; left:3px;
+    width:22px; height:22px; border-radius:50%;
+    background:var(--text); 
+    transition:transform .24s cubic-bezier(.2,.8,.3,1);
+  }
+  .theme-switch[aria-checked="true"] .thumb{ transform:translateX(26px); }
+  @media (prefers-reduced-motion: reduce){ .theme-switch .thumb{ transition:none; } }
+  .high-contrast .theme-switch{ border:2px solid #FFFFFF; background:#000000; }
+  .high-contrast .theme-switch .thumb{ background:#FFEA00; }
+  @media (max-width:420px){ .theme-switch{ width:48px; height:26px; } .theme-switch .thumb{ width:18px; height:18px; } .theme-switch[aria-checked="true"] .thumb{ transform:translateX(22px); } }
+
+  /* Narration controls appear only while speech is active */
+  .narrate-group{ display:flex; align-items:center; gap:6px; }
+  .a11y-btn[hidden]{ display:none; }
+
+  /* Section currently being read aloud */
+  .is-narrating{
+    outline:2px solid var(--accent-bright);
+    outline-offset:8px;
+    border-radius:4px;
+    scroll-margin-top:96px;
+  }
+
+  /* ---------- MOBILE NAV (replaces the nav that used to just vanish) ---------- */
+  .menu-btn{ display:none; }
+  @media (max-width:800px){
+    .menu-btn{
+      display:flex; align-items:center; justify-content:center;
+      width:32px; height:32px; border:1px solid var(--line-strong); border-radius:50%;
+      background:transparent; color:var(--text-dim); cursor:pointer; flex-shrink:0;
+    }
+    .menu-btn[aria-expanded="true"]{ background:var(--accent-dim); color:var(--accent-bright); border-color:var(--accent); }
+    .menu-btn svg{ width:16px; height:16px; fill:none; stroke:currentColor; stroke-width:1.8; stroke-linecap:round; }
+  }
+  .mobile-nav{
+    display:none;
+    border-top:1px solid var(--line);
+    background:var(--bg-raised);
+  }
+  .mobile-nav.open{ display:block; }
+  @media (min-width:801px){ .mobile-nav.open{ display:none; } }
+  .mobile-nav ul{ list-style:none; max-width:1120px; margin:0 auto; padding:8px 20px 16px; }
+  .mobile-nav a{
+    display:block; padding:12px 4px; font-size:0.9375rem; color:var(--text-dim);
+    border-bottom:1px solid var(--line-soft);
+  }
+  .mobile-nav a:hover, .mobile-nav a:focus-visible{ color:var(--accent-bright); }
+
+  /* ---------- FOOTER CONTACT ROWS ---------- */
+  .contact-row{ display:flex; align-items:center; gap:10px; }
+  .copy-btn{
+    border:1px solid var(--line-strong); background:transparent; color:var(--text-faint);
+    border-radius:3px; font-size:0.6562rem; padding:3px 8px; cursor:pointer;
+    font-family:'JetBrains Mono', monospace; text-transform:uppercase; letter-spacing:0.04em;
+    transition:color .2s ease, border-color .2s ease;
+    flex-shrink:0;
+  }
+  .copy-btn:hover{ color:var(--text); border-color:var(--text-dim); }
+  .copy-btn.done{ color:var(--accent-bright); border-color:var(--accent); }
+
+  /* ---------- SCREEN-READER UTILITIES ---------- */
+  .sr-only{
+    position:absolute; width:1px; height:1px; padding:0; margin:-1px;
+    overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; border:0;
+  }
+
+  /* Without JS the reveal animation would leave the page blank — opt in instead. */
+  html.js .reveal{ opacity:0; transform:translateY(18px); }
+
+  /* ---------- HERO ---------- */
+  .hero{ padding:96px 0 64px; display:grid; grid-template-columns:1.15fr 0.85fr; gap:56px; align-items:center; }
+  @media (max-width:900px){ .hero{ grid-template-columns:1fr; padding:56px 0 48px; } }
+
+
+  .hero h1{ font-size:clamp(2.1rem, 4.6vw, 3.5rem); font-weight:600; line-height:1.08; color:var(--text); max-width:640px; }
+  .hero h1 .accent{ color:var(--accent-bright); }
+  .hero p.lede{ margin-top:24px; font-size:1.0625rem; color:var(--text-dim); max-width:520px; }
+  .hero-cta{ margin-top:36px; display:flex; gap:14px; flex-wrap:wrap; }
+
+  .btn{ display:inline-flex; align-items:center; gap:8px; padding:12px 22px; font-size:0.875rem; font-weight:500; border-radius:var(--radius); transition:transform .18s ease, background .18s ease, border-color .18s ease; border:1px solid transparent; }
+  .btn-primary{ background:var(--accent); color:var(--accent-ink); font-weight:600; }
+  .btn-primary:hover{ background:var(--accent-bright); transform:translateY(-1px); }
+  .btn-ghost{ border-color:var(--line-strong); color:var(--text); }
+  .btn-ghost:hover{ border-color:var(--text-dim); transform:translateY(-1px); }
+
+  .terminal{ background:var(--bg-raised); border:1px solid var(--line); border-radius:6px; overflow:hidden; box-shadow:0 30px 60px -30px rgba(0,0,0,0.6); }
+  .terminal-head{ display:flex; align-items:center; justify-content:space-between; padding:12px 16px; border-bottom:1px solid var(--line); background:var(--bg-card); }
+  .terminal-head .dots{ display:flex; gap:6px; }
+  .terminal-head .dots span{ width:8px; height:8px; border-radius:50%; background:var(--line-strong); }
+  .terminal-head .label{ font-size:0.6562rem; color:var(--text-faint); text-transform:uppercase; }
+  .terminal-body{ padding:22px 20px 24px; font-size:0.8125rem; color:var(--text-dim); min-height:220px; }
+  .terminal-body .line{ display:block; white-space:pre; }
+  html.js .terminal-body .line{ opacity:0; }
+  .terminal-body .hl{ color:var(--accent-bright); }
+  .terminal-body .strong{ color:var(--text); }
+  .cursor{ display:inline-block; width:7px; height:14px; background:var(--accent-bright); vertical-align:middle; animation:blink 1s step-end infinite; }
+  @keyframes blink{ 50%{ opacity:0; } }
+  .terminal-foot{ border-top:1px solid var(--line); padding:10px 16px; display:flex; justify-content:space-between; font-size:0.6562rem; color:var(--text-faint); text-transform:uppercase; }
+
+  /* ---------- SECTION SHARED ---------- */
+  section{ padding:88px 0; border-top:1px solid var(--line-soft); }
+  section:first-of-type{ border-top:none; }
+  .section-head{ display:flex; align-items:baseline; justify-content:space-between; gap:24px; margin-bottom:48px; flex-wrap:wrap; }
+  .section-tag{ font-size:0.7188rem; color:var(--accent-bright); text-transform:uppercase; }
+  .section-head h1, .section-head h2{ font-size:clamp(1.5rem, 2.6vw, 2.1rem); font-weight:600; margin-top:8px; }
+  .section-note{ font-size:0.8438rem; color:var(--text-faint); max-width:280px; text-align:right; }
+  @media (max-width:640px){ .section-note{ text-align:left; } }
+
+  .reveal{ transition:opacity .7s ease, transform .7s ease; }
+  .reveal.in{ opacity:1 !important; transform:translateY(0) !important; }
+
+  /* ---------- HIGHLIGHTS ---------- */
+  .highlights{ display:grid; grid-template-columns:repeat(3, 1fr); gap:1px; background:var(--line); border:1px solid var(--line); border-radius:4px; overflow:hidden; }
+  @media (max-width:800px){ .highlights{ grid-template-columns:1fr; } }
+  .h-card{ background:var(--bg-raised); padding:32px 28px; }
+  .h-card .tag{ font-size:0.6562rem; color:var(--text-faint); text-transform:uppercase; margin-bottom:16px; }
+  .h-card h3{ font-size:1.0625rem; font-weight:600; margin-bottom:10px; }
+  .h-card p{ font-size:0.875rem; color:var(--text-dim); }
+
+  /* ---------- CASES ---------- */
+  .case{ display:grid; grid-template-columns:0.9fr 1.4fr; gap:48px; padding:40px 0; }
+  .case + .case{ border-top:1px solid var(--line-soft); }
+  @media (max-width:860px){ .case{ grid-template-columns:1fr; gap:24px; } }
+  .case-meta{ position:relative; }
+  .case-device{ margin-top:32px; }
+  .case-device img{ width:100%; max-width:268px; height:auto; display:block; }
+  .case-device figcaption{
+    margin-top:12px; max-width:268px;
+    font-size:0.6875rem; color:var(--text-faint);
+    text-transform:uppercase; letter-spacing:0.05em;
+  }
+  @media (max-width:860px){
+    .case-device{ margin-top:24px; }
+    .case-device img{ max-width:190px; }
+  }
+  .case-id{ font-size:0.75rem; color:var(--accent-bright); margin-bottom:14px; display:block; }
+  .case-meta h3{ font-size:1.375rem; font-weight:600; margin-bottom:10px; line-height:1.25; }
+  .case-meta .sub{ font-size:0.8125rem; color:var(--text-faint); margin-bottom:18px; }
+  .case-tags{ display:flex; flex-wrap:wrap; gap:8px; }
+  .case-tags span{ font-size:0.6875rem; color:var(--text-dim); border:1px solid var(--line-strong); padding:4px 9px; border-radius:20px; }
+  .case-block{ margin-bottom:20px; }
+  .case-block .label{ font-size:0.6875rem; color:var(--text-faint); text-transform:uppercase; margin-bottom:8px; display:block; }
+  .case-block p{ font-size:0.9062rem; color:var(--text-dim); }
+  .case-block ul{ margin-top:6px; padding-left:18px; }
+  .case-block li{ font-size:0.9062rem; color:var(--text-dim); margin-bottom:4px; }
+
+  .minor-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--line); border:1px solid var(--line); border-radius:4px; overflow:hidden; margin-top:8px; }
+  @media (max-width:800px){ .minor-grid{ grid-template-columns:1fr; } }
+  .minor-card{ background:var(--bg-raised); padding:24px; }
+  .minor-card .k{ font-size:0.6562rem; color:var(--text-faint); text-transform:uppercase; margin-bottom:8px; }
+  .minor-card h4{ font-size:0.9375rem; font-weight:600; margin-bottom:6px; }
+  .minor-card p{ font-size:0.8125rem; color:var(--text-dim); }
+  .other-work{ margin-top:72px; padding-top:40px; border-top:1px solid var(--line); }
+  .minor-label{ font-size:0.6875rem; color:var(--text-faint); text-transform:uppercase; display:block; margin-bottom:12px; }
+
+  /* ---------- ABOUT / PHILOSOPHY ---------- */
+  .about-grid{ display:grid; grid-template-columns:0.8fr 1.2fr; gap:56px; }
+  @media (max-width:860px){ .about-grid{ grid-template-columns:1fr; gap:32px; } }
+  .about-grid p{ font-size:0.9688rem; color:var(--text-dim); margin-bottom:16px; }
+  .about-grid p strong{ color:var(--text); font-weight:600; }
+  .principles{ display:flex; flex-direction:column; gap:22px; }
+  .principle{ padding-left:20px; border-left:2px solid var(--line-strong); transition:border-color .25s ease; }
+  .principle:hover{ border-color:var(--accent); }
+  .principle h4{ font-size:0.9375rem; font-weight:600; margin-bottom:6px; }
+  .principle p{ font-size:0.875rem; color:var(--text-dim); }
+
+  .timeline{ margin-top:40px; }
+  .track .timeline{ margin-top:0; }
+  .tl-row{ display:grid; grid-template-columns:110px 1fr; gap:20px; padding:16px 0; border-top:1px solid var(--line-soft); }
+  .tl-row:last-child{ border-bottom:1px solid var(--line-soft); }
+  .tl-when{ font-size:0.75rem; color:var(--text-faint); }
+  .tl-what h4{ font-size:0.9062rem; font-weight:600; }
+  .tl-what p{ font-size:0.8125rem; color:var(--text-dim); margin-top:3px; }
+
+
+
+/* ---------- GALERIA DE TELAS ---------- */
+  .gallery{ margin:36px 0 8px; }
+  .gallery-group + .gallery-group{ margin-top:28px; }
+  .gallery-group h4{
+    font-size:0.625rem; text-transform:uppercase; letter-spacing:0.08em;
+    color:var(--text-faint); margin-bottom:12px;
+    display:flex; align-items:center; gap:10px;
+  }
+  .gallery-group h4::after{ content:""; flex:1; height:1px; background:var(--line); }
+
+  .shots-grid{ display:grid; gap:14px; grid-template-columns:repeat(5, 1fr); }
+  .shots-grid.wide{ grid-template-columns:repeat(2, 1fr); }
+  .shots-grid.pair{ grid-template-columns:repeat(2, minmax(0,220px)); }
+  @media (max-width:980px){
+    .shots-grid{ grid-template-columns:repeat(3, 1fr); }
+    .shots-grid.wide{ grid-template-columns:1fr; }
+  }
+  @media (max-width:560px){
+    .shots-grid{ grid-template-columns:repeat(2, 1fr); }
+    .shots-grid.pair{ grid-template-columns:repeat(2, 1fr); }
+  }
+
+  .shot{
+    display:block; position:relative; background:var(--bg-raised);
+    border:1px solid var(--line); border-radius:8px; padding:10px;
+    transition:border-color .2s ease, transform .2s ease;
+  }
+  .shot:hover, .shot:focus-visible{ border-color:var(--accent); transform:translateY(-2px); }
+  .shot img{ width:100%; height:auto; display:block; border-radius:4px; }
+  /* Todas as telas foram normalizadas para a mesma moldura, com fundo
+     transparente. O aspect-ratio garante o mesmo card mesmo se uma
+     imagem for trocada depois por outra de proporção diferente. */
+  .shots-grid:not(.wide) .shot img{ aspect-ratio:780/1500; object-fit:contain; }
+  .shots-grid.wide .shot img{ aspect-ratio:1440/1472; object-fit:contain; }
+  .shots-grid.solo{ grid-template-columns:minmax(0, 720px); }
+  .shots-grid.solo .shot img{ aspect-ratio:1400/1000; object-fit:contain; }
+  .shots-grid.ds{ grid-template-columns:repeat(2, 1fr); }
+  .shots-grid.ds .shot img{ aspect-ratio:1200/860; object-fit:contain; }
+  @media (max-width:700px){ .shots-grid.ds{ grid-template-columns:1fr; } }
+  .shot-name{
+    display:block; margin-top:9px; font-size:0.625rem; color:var(--text-faint);
+    text-transform:uppercase; letter-spacing:0.05em;
+  }
+  .shot .zoom{
+    position:absolute; top:18px; right:18px;
+    width:26px; height:26px; border-radius:50%;
+    background:rgba(10,11,12,0.72); color:#fff;
+    display:flex; align-items:center; justify-content:center;
+    opacity:0; transition:opacity .2s ease;
+  }
+  .shot:hover .zoom, .shot:focus-visible .zoom{ opacity:1; }
+  .shot .zoom svg{ width:13px; height:13px; fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; }
+  .gallery figcaption{ font-size:0.8125rem; color:var(--text-faint); margin-top:20px; max-width:640px; }
+  .high-contrast .shot{ border:1px solid #FFFFFF; }
+
+  /* ---------- LIGHTBOX ---------- */
+  .lightbox{
+    position:fixed; inset:0; z-index:120;
+    background:var(--scrim);
+    display:none; grid-template-rows:auto 1fr auto;
+  }
+  .lightbox.open{ display:grid; }
+
+  .lightbox-head{
+    display:flex; align-items:center; justify-content:space-between;
+    gap:16px; padding:16px 22px;
+  }
+  .lightbox-meta{ min-width:0; }
+  .lightbox-group{ font-size:0.625rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--accent-bright); }
+  .lightbox-counter{ font-family:'JetBrains Mono', monospace; font-size:0.6875rem; color:var(--text-faint); margin-top:3px; }
+  .lightbox-tools{ display:flex; align-items:center; gap:8px; flex-shrink:0; }
+
+  .lb-btn{
+    width:36px; height:36px; flex-shrink:0;
+    border:1px solid var(--line-strong); border-radius:50%;
+    background:transparent; color:var(--text-dim); cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .lb-btn:hover{ color:var(--text); border-color:var(--text-dim); }
+  .lb-btn svg{ width:16px; height:16px; fill:none; stroke:currentColor; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
+  .lb-btn[hidden]{ display:none; }
+
+  .lightbox-stage{
+    position:relative; display:flex; align-items:center; justify-content:center;
+    padding:0 22px; min-height:0;
+  }
+  .lightbox-stage img{
+    max-width:100%; max-height:100%;
+    object-fit:contain; border-radius:6px;
+    transition:opacity .18s ease;
+    box-shadow:0 30px 80px -40px var(--shot-shadow);
+  }
+  .lightbox-nav{
+    position:absolute; top:50%; transform:translateY(-50%);
+    width:44px; height:44px;
+    background:var(--statusbar-bg);
+  }
+  .lightbox-nav.prev{ left:14px; }
+  .lightbox-nav.next{ right:14px; }
+  @media (max-width:640px){
+    .lightbox-nav{ display:none; }   /* swipe cobre isso no toque */
+    .lightbox-stage{ padding:0 10px; }
+  }
+
+  .lightbox-foot{ padding:14px 22px 18px; }
+  .lightbox-caption{ font-size:0.8125rem; color:var(--text-dim); max-width:70ch; margin:0 auto 12px; text-align:center; }
+  .lightbox-rail{
+    display:flex; gap:8px; overflow-x:auto; padding-bottom:4px;
+    justify-content:flex-start; scrollbar-width:thin;
+  }
+  @media (min-width:900px){ .lightbox-rail{ justify-content:center; } }
+  .lightbox-rail[hidden]{ display:none; }
+  .lightbox-rail button{
+    flex:0 0 auto; width:44px; height:56px; padding:0;
+    border:1px solid var(--line); border-radius:4px; overflow:hidden;
+    background:var(--bg-raised); cursor:pointer; opacity:0.5;
+    transition:opacity .2s ease, border-color .2s ease;
+  }
+  .lightbox-rail button:hover{ opacity:0.85; }
+  .lightbox-rail button[aria-current="true"]{ opacity:1; border-color:var(--accent-bright); }
+  .lightbox-rail img{ width:100%; height:100%; object-fit:cover; object-position:top; display:block; }
+  .high-contrast .lightbox, .high-contrast .reader-overlay{ background:#000000; }
+  .high-contrast .lightbox-rail button[aria-current="true"]{ border-color:#FFEA00; border-width:2px; }
+
+  /* ---------- ABOUT: SPLIT TRACKS ---------- */
+  .tracks{ display:grid; grid-template-columns:1fr 1fr; gap:48px; margin-top:44px; }
+  @media (max-width:860px){ .tracks{ grid-template-columns:1fr; gap:36px; } }
+  .track h3{
+    font-size:0.6875rem; color:var(--accent-bright);
+    text-transform:uppercase; letter-spacing:0.08em; margin-bottom:18px;
+  }
+
+  /* ---------- MENTORIAS ---------- */
+  .books{ display:grid; grid-template-columns:repeat(3, 1fr); gap:20px; }
+  @media (max-width:900px){ .books{ grid-template-columns:1fr; } }
+
+  .book-card{
+    display:flex; flex-direction:column; gap:14px; text-align:left;
+    background:var(--bg-raised); border:1px solid var(--line);
+    border-radius:8px; padding:24px 22px 22px;
+    color:inherit; font:inherit; cursor:pointer;
+    transition:border-color .2s ease, transform .2s ease;
+  }
+  .book-card:hover, .book-card:focus-visible{ border-color:var(--accent); transform:translateY(-2px); }
+  .high-contrast .book-card{ border:1px solid #FFFFFF; }
+
+  .book-cover{
+    position:relative; height:150px; border-radius:6px; overflow:hidden;
+    border:1px solid var(--line-strong);
+    background:
+      radial-gradient(120% 140% at 12% 0%, color-mix(in srgb, var(--accent) 22%, transparent) 0%, transparent 62%),
+      var(--bg-card);
+    color:var(--accent-bright);
+    display:block;
+  }
+  .book-cover svg{ position:absolute; inset:0; width:100%; height:100%; display:block; }
+  .book-cover-tag{
+    position:absolute; left:14px; bottom:12px;
+    font-family:'JetBrains Mono', monospace; font-size:0.625rem;
+    letter-spacing:0.09em; text-transform:uppercase;
+    color:var(--accent-ink); background:var(--accent-bright);
+    padding:3px 9px; border-radius:3px;
+  }
+  .book-card:hover .book-cover, .book-card:focus-visible .book-cover{ border-color:var(--accent); }
+  .high-contrast .book-cover{ background:#000000; border-color:#FFFFFF; color:#FFEA00; }
+  .high-contrast .book-cover-tag{ background:#FFEA00; color:#000000; }
+
+  .book-level{ font-size:0.625rem; text-transform:uppercase; letter-spacing:0.07em; color:var(--text-faint); }
+  .book-card h3{ font-size:1.0625rem; font-weight:600; line-height:1.3; }
+  .book-card p{ font-size:0.875rem; color:var(--text-dim); }
+  .book-meta{ font-size:0.6875rem; color:var(--text-faint); margin-top:auto; padding-top:6px; }
+
+  /* ---------- READER ---------- */
+  .reader-overlay{
+    position:fixed; inset:0; z-index:100;
+    background:var(--scrim);
+    display:none; align-items:center; justify-content:center;
+    padding:24px;
+  }
+  .reader-overlay.open{ display:flex; }
+  @media (max-width:640px){ .reader-overlay{ padding:0; } }
+
+  .reader{
+    background:var(--bg); border:1px solid var(--line-strong);
+    border-radius:8px; width:min(1000px, 100%); max-height:100%;
+    display:grid; grid-template-rows:auto 1fr auto; overflow:hidden;
+  }
+  @media (max-width:640px){ .reader{ border-radius:0; height:100%; } }
+
+  .reader-head{
+    display:flex; align-items:flex-start; justify-content:space-between; gap:16px;
+    padding:20px 24px; border-bottom:1px solid var(--line);
+  }
+  .reader-head .lvl{ font-size:0.625rem; text-transform:uppercase; letter-spacing:0.07em; color:var(--accent-bright); }
+  .reader-head h2{ font-size:1.125rem; font-weight:600; margin-top:4px; }
+  .reader-close{
+    width:34px; height:34px; flex-shrink:0;
+    border:1px solid var(--line-strong); border-radius:50%;
+    background:transparent; color:var(--text-dim); cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .reader-close:hover{ color:var(--text); border-color:var(--text-dim); }
+  .reader-close svg{ width:15px; height:15px; stroke:currentColor; stroke-width:1.8; fill:none; stroke-linecap:round; }
+
+  .reader-body{ display:grid; grid-template-columns:230px 1fr; min-height:0; }
+  @media (max-width:760px){ .reader-body{ grid-template-columns:1fr; } }
+
+  .reader-toc{ border-right:1px solid var(--line); padding:18px 14px; overflow-y:auto; }
+  @media (max-width:760px){
+    .reader-toc{ border-right:none; border-bottom:1px solid var(--line); max-height:132px; }
+  }
+  .reader-toc ol{ list-style:none; counter-reset:ch; }
+  .reader-toc button{
+    counter-increment:ch;
+    display:flex; gap:10px; width:100%; text-align:left;
+    background:transparent; border:none; cursor:pointer;
+    color:var(--text-dim); font:inherit; font-size:0.8125rem;
+    padding:9px 10px; border-radius:4px; line-height:1.35;
+  }
+  .reader-toc button::before{
+    content:counter(ch, decimal-leading-zero);
+    font-family:'JetBrains Mono', monospace; font-size:0.625rem;
+    color:var(--text-faint); padding-top:3px;
+  }
+  .reader-toc button:hover{ color:var(--text); background:var(--bg-raised); }
+  .reader-toc button[aria-current="true"]{ background:var(--accent-dim); color:var(--accent-bright); }
+  .reader-toc button[aria-current="true"]::before{ color:var(--accent-bright); }
+
+  .reader-content{ padding:32px 40px 40px; overflow-y:auto; }
+  @media (max-width:640px){ .reader-content{ padding:24px 20px 32px; } }
+  .reader-content h3{ font-size:1.375rem; font-weight:600; margin-bottom:20px; line-height:1.25; }
+  .reader-content p{ font-size:1rem; color:var(--text-dim); margin-bottom:18px; max-width:62ch; }
+  .reader-content p.reading{
+    color:var(--text);
+    box-shadow:-14px 0 0 -11px var(--accent-bright);
+    padding-left:14px; margin-left:-14px;
+    scroll-margin:80px;
+  }
+  .reader-note{
+    font-size:0.8125rem; color:var(--text-faint);
+    border-left:2px solid var(--line-strong); padding-left:14px; margin-bottom:24px;
+  }
+
+  .reader-foot{
+    display:flex; align-items:center; justify-content:space-between; gap:14px;
+    padding:14px 24px; border-top:1px solid var(--line); flex-wrap:wrap;
+  }
+  .reader-progress{ font-size:0.6875rem; color:var(--text-faint); font-family:'JetBrains Mono', monospace; }
+  .reader-actions{ display:flex; align-items:center; gap:8px; }
+  .reader-btn{
+    display:inline-flex; align-items:center; gap:7px;
+    border:1px solid var(--line-strong); background:transparent;
+    color:var(--text-dim); border-radius:3px; cursor:pointer;
+    font:inherit; font-size:0.8125rem; padding:7px 13px;
+    transition:color .2s ease, border-color .2s ease;
+  }
+  .reader-btn:hover:not(:disabled){ color:var(--text); border-color:var(--text-dim); }
+  .reader-btn:disabled{ opacity:0.4; cursor:not-allowed; }
+  .reader-btn svg{ width:14px; height:14px; fill:none; stroke:currentColor; stroke-width:1.7; stroke-linecap:round; stroke-linejoin:round; }
+  .reader-btn.audio[aria-pressed="true"]{ color:var(--accent-bright); border-color:var(--accent); background:var(--accent-dim); }
+  .high-contrast .reader{ border:2px solid #FFFFFF; }
+
+  /* ---------- FOOTER ---------- */
+  footer{ padding:72px 0 40px; border-top:1px solid var(--line-soft); }
+  .footer-top{ display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:32px; margin-bottom:48px; }
+  .footer-top h2{ font-size:clamp(1.7rem, 4vw, 2.6rem); font-weight:600; max-width:520px; }
+  .footer-links{ display:flex; flex-direction:column; gap:12px; }
+  .footer-links a{ font-size:0.875rem; color:var(--text-dim); display:flex; align-items:center; gap:8px; transition:color .2s ease; }
+  .footer-links a:hover{ color:var(--accent-bright); }
+  .footer-links a::after{ content:"→"; opacity:0; transform:translateX(-4px); transition:opacity .2s ease, transform .2s ease; }
+  .footer-links a:hover::after{ opacity:1; transform:translateX(0); }
+  .footer-bottom{ display:flex; justify-content:space-between; align-items:center; padding-top:24px; border-top:1px solid var(--line-soft); font-size:0.75rem; color:var(--text-faint); flex-wrap:wrap; gap:12px; }
+
+</style>
+<script>
+/* Applied before first paint so the page never flashes the wrong theme. */
+(function(){
+  try{
+    var d=document.documentElement;
+    var c=localStorage.getItem("mc_portfolio_contrast");
+    if(c==="1") d.classList.add("high-contrast");
+    if(c!==null) d.classList.add("contrast-user-set");
+    if(localStorage.getItem("mc_portfolio_textsize")==="1") d.style.setProperty("--font-scale","1.25");
+    var t=localStorage.getItem("mc_portfolio_theme");
+    if(t){ d.classList.add("theme-user-set"); if(t==="light") d.classList.add("light"); }
+    else if(window.matchMedia&&window.matchMedia("(prefers-color-scheme: light)").matches){ d.classList.add("light"); }
+    d.style.colorScheme = d.classList.contains("light") ? "light" : "dark";
+    var l=localStorage.getItem("mc_portfolio_lang");
+    if(l==="en") d.lang="en-US"; else if(l==="es") d.lang="es-ES";
+    d.classList.add("js");
+  }catch(e){ document.documentElement.classList.add("js"); }
+})();
+</script>
+</head>
+<body>
+
+<a href="#main-content" class="skip-link mono" data-i18n="a11ySkipLink">Pular para o conteúdo principal</a>
+
+<!-- Live region: every state change (contraste, narração, idioma) is announced here -->
+<div id="a11y-status" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></div>
+
+<header class="statusbar">
+  <div class="statusbar-inner">
+    <div class="status-left">
+      <span class="status-dot" aria-hidden="true"></span>
+      <a class="status-text mono" href="index.html" data-i18n="wordmark">Mateus Cherem — Senior Product Designer</a>
+    </div>
+    <div class="status-right">
+      <nav class="status-nav mono" id="main-nav" aria-label="Navegação principal">
+        <a href="index.html" data-i18n="navImpact">impacto</a>
+        <a href="cases.html" data-i18n="navCases">cases</a>
+        <a href="sobre.html" data-i18n="navAbout">sobre</a>
+        <a href="mentorias.html" data-i18n="navMentorias" aria-current="page">mentorias</a>
+        <a href="#contact" data-i18n="navContact">contato</a>
+      </nav>
+
+      <div class="a11y-toolbar" role="group" id="a11y-toolbar" aria-label="Ferramentas de acessibilidade">
+        <button type="button" id="contrast-btn" class="a11y-btn" aria-pressed="false" aria-label="Ativar alto contraste" title="Alto contraste">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 0 0 18z" fill="currentColor" stroke="none"/></svg>
+        </button>
+        <button type="button" id="theme-switch" class="theme-switch" role="switch" aria-checked="false" aria-label="Modo claro" title="Modo claro">
+          <span class="track" aria-hidden="true">
+            <svg class="tw-moon" viewBox="0 0 24 24" focusable="false"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5z"/></svg>
+            <svg class="tw-sun" viewBox="0 0 24 24" focusable="false"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.6v2.2M12 19.2v2.2M2.6 12h2.2M19.2 12h2.2M5.4 5.4l1.6 1.6M17 17l1.6 1.6M18.6 5.4L17 7M7 17l-1.6 1.6"/></svg>
+            <span class="thumb"></span>
+          </span>
+        </button>
+        <button type="button" id="textsize-btn" class="a11y-btn" aria-pressed="false" aria-label="Aumentar o tamanho do texto" title="Tamanho do texto">
+          <span class="glyph" aria-hidden="true">A+</span>
+        </button>
+        <div class="narrate-group">
+          <button type="button" id="narrate-btn" class="a11y-btn" aria-pressed="false" aria-label="Ouvir o conteúdo da página" title="Ouvir página">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M11 5 6 9H3v6h3l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/></svg>
+          </button>
+          <button type="button" id="narrate-stop-btn" class="a11y-btn" hidden aria-label="Parar narração" title="Parar narração">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="6" y="6" width="12" height="12" rx="1.5"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="lang-switch" role="group" aria-label="Seletor de idioma">
+        <button type="button" class="lang-btn" data-lang="pt" aria-pressed="true" aria-label="Mudar para Português"><span aria-hidden="true">🇧🇷</span> PT</button>
+        <button type="button" class="lang-btn" data-lang="en" aria-pressed="false" aria-label="Switch to English"><span aria-hidden="true">🇺🇸</span> EN</button>
+        <button type="button" class="lang-btn" data-lang="es" aria-pressed="false" aria-label="Cambiar a Español"><span aria-hidden="true">🇪🇸</span> ES</button>
+      </div>
+
+      <button type="button" class="menu-btn" id="menu-btn" aria-expanded="false" aria-controls="mobile-nav" aria-label="Abrir menu de navegação">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <nav class="mobile-nav" id="mobile-nav" aria-label="Navegação principal (mobile)">
+    <ul>
+      <li><a href="index.html" data-i18n="navImpact">impacto</a></li>
+      <li><a href="cases.html" data-i18n="navCases">cases</a></li>
+      <li><a href="sobre.html" data-i18n="navAbout">sobre</a></li>
+      <li><a href="mentorias.html" data-i18n="navMentorias" aria-current="page">mentorias</a></li>
+      <li><a href="#contact" data-i18n="navContact">contato</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main class="wrap" id="main-content" tabindex="-1">
+
+  <!-- MENTORIAS -->
+  <section id="mentorias" aria-labelledby="mentorias-heading">
+    <div class="section-head reveal">
+      <div>
+        <div class="section-tag mono">04 — <span data-i18n="sectionTagMentorias">mentorias</span></div>
+        <h1 id="mentorias-heading" data-i18n="mentoriasHeading">E-books curtos sobre o ofício</h1>
+      </div>
+      <p class="section-note" data-i18n="mentoriasNote">Passo a passo do que aprendi na prática, do básico ao avançado. Leia na tela ou ouça em áudio.</p>
+    </div>
+
+    <div class="books reveal" id="books-grid"></div>
+  </section>
+
+</main>
+
+<div class="wrap">
+  <!-- FOOTER -->
+  <footer id="contact">
+    <div class="footer-top reveal">
+      <h2 data-i18n="footerHeading">Um recorte do trabalho que venho fazendo em pagamentos, terminais e design systems.</h2>
+      <div class="footer-links mono">
+        <div class="contact-row">
+          <a href="mailto:cheremateus@gmail.com" aria-label="Enviar e-mail para cheremateus@gmail.com">cheremateus@gmail.com</a>
+          <button type="button" class="copy-btn" data-copy="cheremateus@gmail.com" aria-label="Copiar o e-mail cheremateus@gmail.com">copiar</button>
+        </div>
+        <div class="contact-row">
+          <a href="mailto:cherem@outlook.com.br" aria-label="Enviar e-mail para cherem@outlook.com.br">cherem@outlook.com.br</a>
+          <button type="button" class="copy-btn" data-copy="cherem@outlook.com.br" aria-label="Copiar o e-mail cherem@outlook.com.br">copiar</button>
+        </div>
+        <a href="https://www.linkedin.com/in/mateuscherem/" target="_blank" rel="noopener" aria-label="Abrir perfil do LinkedIn (nova aba)">linkedin.com/in/mateuscherem</a>
+        <a href="#" data-i18n="footerResume" aria-label="Baixar currículo em PDF">baixar currículo (pdf)</a>
+      </div>
+    </div>
+    <div class="footer-bottom mono">
+      <span data-i18n="footerCopyright">© 2026 Mateus Cherem</span>
+      <span data-i18n="footerLocation">São Paulo, Brasil</span>
+    </div>
+  </footer>
+</div>
+<div class="reader-overlay" id="reader-overlay">
+  <div class="reader" id="reader-dialog" role="dialog" aria-modal="true" aria-labelledby="reader-title">
+    <div class="reader-head">
+      <div>
+        <div class="lvl mono" id="reader-level"></div>
+        <h2 id="reader-title"></h2>
+      </div>
+      <button type="button" class="reader-close" id="reader-close" aria-label="Fechar o leitor" data-i18n-aria="readerClose">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
+
+    <div class="reader-body">
+      <nav class="reader-toc" aria-label="Capítulos" data-i18n-aria="readerToc">
+        <ol id="reader-toc-list"></ol>
+      </nav>
+      <article class="reader-content" id="reader-content" tabindex="0" aria-live="polite"></article>
+    </div>
+
+    <div class="reader-foot">
+      <span class="reader-progress" id="reader-progress"></span>
+      <div class="reader-actions">
+        <button type="button" class="reader-btn audio" id="reader-audio" aria-pressed="false" aria-label="Ouvir este capítulo">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M11 5 6 9H3v6h3l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/></svg>
+          <span class="txt" data-i18n="readerAudioPlay">Ouvir</span>
+        </button>
+        <button type="button" class="reader-btn" id="reader-audio-stop" hidden aria-label="Parar o áudio" data-i18n-aria="readerAudioStop">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="6" y="6" width="12" height="12" rx="1.5"/></svg>
+        </button>
+        <button type="button" class="reader-btn" id="reader-prev" data-i18n="readerPrev" aria-label="Capítulo anterior" data-i18n-aria="readerPrevAria">Anterior</button>
+        <button type="button" class="reader-btn" id="reader-next" data-i18n="readerNext" aria-label="Próximo capítulo" data-i18n-aria="readerNextAria">Próximo</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+/* ============ BIBLIOTECA DE MENTORIAS ============
+   Conteúdo escrito em português. A interface do leitor é traduzida;
+   os textos dos e-books, não — o leitor avisa isso quando a interface
+   está em outro idioma, e o audiobook sempre narra em pt-BR. */
+const bookLang = "pt-BR";
+
+const library = [
+  {
+    id: "fundamentos",
+    cover: `<svg viewBox="0 0 400 240" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false"><g fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.35"><circle cx="42" cy="52" r="4"/><circle cx="96" cy="96" r="4"/><circle cx="58" cy="150" r="4"/><circle cx="128" cy="44" r="4"/><circle cx="34" cy="106" r="4"/><circle cx="112" cy="168" r="4"/><circle cx="150" cy="112" r="4"/></g><g stroke="currentColor" stroke-width="1.5" opacity="0.25"><path d="M42 52 96 96 58 150"/><path d="M128 44 96 96 150 112"/><path d="M34 106 96 96 112 168"/></g><g fill="currentColor"><rect x="212" y="52" width="140" height="7" rx="3.5"/><rect x="212" y="76" width="104" height="7" rx="3.5" opacity="0.72"/><rect x="212" y="100" width="122" height="7" rx="3.5" opacity="0.54"/><rect x="212" y="124" width="86" height="7" rx="3.5" opacity="0.36"/><rect x="212" y="148" width="112" height="7" rx="3.5" opacity="0.22"/></g><path d="M172 100 190 100 M184 94 190 100 184 106" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+    level: "Básico", levelKey: "levelBasic",
+    title: "Do problema ao primeiro fluxo",
+    blurb: "O caminho de quem está começando: entender o problema antes de desenhar, e chegar num fluxo que outra pessoa consegue ler.",
+    minutes: 6,
+    chapters: [
+      {
+        title: "Antes de abrir o Figma",
+        body: [
+          "A vontade de abrir o Figma na primeira hora do projeto é o erro mais caro que um designer iniciante comete. Não porque desenhar cedo seja proibido, mas porque a tela em branco cria uma pressão de produzir alguma coisa — e o que sai dessa pressão é quase sempre uma solução para um problema que ninguém confirmou existir.",
+          "Antes da primeira tela, você precisa conseguir responder três coisas em voz alta, sem consultar nada: quem tem esse problema, o que essa pessoa faz hoje para contornar ele, e o que muda no negócio se ele for resolvido. Se qualquer uma das três respostas começar com “eu acho”, você ainda está no território do palpite.",
+          "A gambiarra que o usuário já inventou é a informação mais valiosa que existe. Alguém que exporta um relatório para o Excel toda sexta-feira está te dizendo exatamente onde o produto falha e qual é o formato mental que faz sentido pra ele. Procure a gambiarra antes de procurar a referência no Dribbble.",
+          "Um exercício prático: escreva o problema em uma frase que caiba num post-it, sem nomear nenhuma solução. “Reduzir o tempo de aprovação de pedidos” é um problema. “Criar um dashboard de aprovações” já é uma solução disfarçada de problema — e uma solução que você escolheu antes de investigar."
+        ]
+      },
+      {
+        title: "Como fazer uma boa pergunta de pesquisa",
+        body: [
+          "Perguntas ruins produzem dados ruins com muita confiança, e isso é pior do que não ter dado nenhum. A pergunta “você gostaria de um filtro por data?” sempre recebe sim. Ninguém recusa uma funcionalidade hipotética e gratuita.",
+          "Troque futuro por passado. Em vez de “você usaria”, pergunte “me conta a última vez que você precisou fazer isso”. O passado tem detalhe, tem contexto, tem a frustração real. O futuro só tem educação e boa vontade.",
+          "Evite também perguntar por que a pessoa faz algo, pelo menos de forma direta. “Por que” convida à racionalização: a pessoa inventa uma justificativa lógica para um comportamento que foi automático. Pergunte o que ela fez, em que ordem, e o que aconteceu depois. O motivo aparece sozinho no meio da narrativa.",
+          "Cinco a sete conversas bem-feitas com o mesmo perfil já mostram os padrões que importam. Não espere ter trinta entrevistas para começar a agir. O objetivo não é prova estatística — é parar de adivinhar."
+        ]
+      },
+      {
+        title: "Mapear a jornada sem se perder",
+        body: [
+          "Mapa de jornada virou entregável decorativo em muitos times: bonito, gigante, colado na parede, e nunca mais consultado. Isso acontece quando o mapa tenta descrever tudo em vez de decidir alguma coisa.",
+          "Um mapa útil tem um recorte estreito e um objetivo declarado. “A jornada do lojista desde a solicitação da maquininha até a primeira venda” é um recorte. “A jornada do cliente” não é — é um tema.",
+          "Marque no mapa três camadas apenas: o que a pessoa faz, o que ela sente naquele ponto, e onde o sistema atual a deixa na mão. A terceira camada é a que gera trabalho. Cada ponto de queda vira um candidato a problema, e é dali que sai o backlog de design.",
+          "Valide o mapa com quem opera o processo, não só com quem o gerencia. Gestor descreve o processo como ele foi desenhado; quem opera descreve como ele realmente acontece. A diferença entre os dois é o seu espaço de atuação."
+        ]
+      },
+      {
+        title: "Do papel ao wireframe",
+        body: [
+          "Comece no papel porque o papel é feio de propósito. Um rabisco não convida ninguém a discutir cor, raio de borda ou tipografia — e é exatamente essa discussão que você não quer ter enquanto ainda está definindo estrutura.",
+          "No wireframe, resolva quatro coisas antes de qualquer refinamento: qual é a informação mais importante da tela, qual é a única ação principal, o que acontece quando dá errado, e o que a pessoa vê quando ainda não tem dado nenhum. Estado vazio e estado de erro não são detalhe de acabamento; são metade do produto real.",
+          "Nomeie os botões pelo que eles fazem. “Enviar” é preguiça. “Enviar para aprovação” diz o que vai acontecer, e o nome se mantém no aviso de sucesso, na notificação e no histórico. Vocabulário consistente é o que faz alguém aprender a navegar sozinho.",
+          "Se o wireframe precisa de você ao lado para ser entendido, ele ainda não está pronto. Mande para alguém do time sem explicação e veja o que essa pessoa pergunta. As perguntas dela são a lista do que falta."
+        ]
+      },
+      {
+        title: "Como apresentar sem se defender",
+        body: [
+          "A apresentação é parte do design, não um anexo. Quando você abre mostrando a tela, todo mundo comenta a tela. Quando você abre mostrando o problema e a evidência, a conversa fica no lugar certo por muito mais tempo.",
+          "Uma estrutura que funciona: o problema em uma frase, o que você descobriu, a decisão que tomou, e o que você deliberadamente deixou de fora. Esse último item é o que mais gera confiança — mostra que houve escolha, não falta de tempo.",
+          "Separe crítica de preferência. Quando alguém diz “não gostei desse botão”, pergunte o que a pessoa espera que aconteça quando ele for clicado. Metade das vezes a objeção é sobre o fluxo, não sobre o visual, e ela está te dando uma informação útil embrulhada em opinião.",
+          "Anote as decisões junto com o motivo, num lugar que o time consiga achar depois. Daqui a seis meses ninguém vai lembrar por que aquele campo é obrigatório, e sem registro a discussão inteira acontece de novo do zero."
+        ]
+      }
+    ]
+  },
+  {
+    id: "systems",
+    cover: `<svg viewBox="0 0 400 240" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false"><g fill="none" stroke="currentColor" stroke-width="1.4" opacity="0.3"><rect x="34" y="40" width="46" height="46" rx="6"/><rect x="94" y="40" width="46" height="46" rx="6"/><rect x="154" y="40" width="46" height="46" rx="6"/><rect x="34" y="100" width="46" height="46" rx="6"/><rect x="154" y="100" width="46" height="46" rx="6"/><rect x="34" y="160" width="46" height="46" rx="6"/><rect x="94" y="160" width="46" height="46" rx="6"/><rect x="154" y="160" width="46" height="46" rx="6"/></g><rect x="94" y="100" width="46" height="46" rx="6" fill="currentColor"/><g fill="none" stroke="currentColor" stroke-width="1.4"><rect x="244" y="46" width="118" height="34" rx="5" opacity="0.85"/><rect x="244" y="94" width="118" height="34" rx="5" opacity="0.5"/><rect x="244" y="142" width="118" height="34" rx="5" opacity="0.28"/></g><path d="M140 123 236 63 M140 123 236 111 M140 123 236 159" stroke="currentColor" stroke-width="1.2" opacity="0.4" fill="none"/></svg>`,
+    level: "Intermediário", levelKey: "levelIntermediate",
+    title: "Design system que sobrevive ao segundo ano",
+    blurb: "Construir é a parte fácil. Este é sobre o que faz um sistema continuar vivo depois que o entusiasmo inicial passa.",
+    minutes: 5,
+    chapters: [
+      {
+        title: "Por que a maioria morre",
+        body: [
+          "Quase todo design system nasce bem. O time separa uma sprint, monta a biblioteca, faz a documentação bonita, apresenta numa reunião geral e todo mundo aplaude. O problema aparece no mês seis, quando chega a primeira demanda que o sistema não previu e o prazo não permite discutir.",
+          "A partir daí, uma de duas coisas acontece: alguém cria um componente solto no arquivo do projeto, ou alguém adiciona mais uma variante ao componente oficial para acomodar o caso. A primeira gera dívida invisível. A segunda gera um componente com dezoito propriedades que ninguém entende.",
+          "Design system não morre de falta de qualidade inicial. Morre de falta de dono e de falta de processo para o caso excepcional. Se não existe um caminho combinado para “preciso de algo que não tem”, o caminho será a exceção silenciosa.",
+          "Antes de expandir a biblioteca, responda: quem decide o que entra? em quanto tempo essa decisão sai? e o que o time faz enquanto espera? Sem essas três respostas, você está construindo uma biblioteca, não um sistema."
+        ]
+      },
+      {
+        title: "Comece pelo token, não pelo componente",
+        body: [
+          "Componente é a parte visível, então é por onde todo mundo quer começar. Mas o que dá consistência de verdade é a camada de baixo: as decisões de cor, espaçamento, tipografia e raio que todos os componentes consultam.",
+          "Separe token primitivo de token semântico. O primitivo é o valor cru — um azul específico, um espaçamento de oito. O semântico é o papel que aquele valor cumpre: cor de superfície elevada, cor de texto secundário, espaçamento entre seções. Componentes devem consumir o semântico, nunca o primitivo.",
+          "Essa separação é o que torna troca de tema possível. Quando você redefine o que significa “cor de ação primária”, cada botão do produto acompanha, e nenhum arquivo precisa ser reaberto. É também a base de qualquer estratégia multimarca.",
+          "Um teste simples de maturidade: peça para alguém trocar toda a paleta do produto. Se a resposta envolver abrir componentes um por um, sua camada de token ainda não existe de verdade — existe uma lista de cores com nome bonito."
+        ]
+      },
+      {
+        title: "Anatomia de um componente que escala",
+        body: [
+          "Um componente escalável resolve um comportamento, não um layout. “Card de produto” tende a envelhecer mal porque carrega uma composição específica. “Superfície com cabeçalho, conteúdo e ações” sobrevive a várias telas porque descreve estrutura.",
+          "Cuidado com o excesso de propriedades. Toda vez que você adiciona uma variante para acomodar um caso único, você transfere a complexidade da decisão para quem usa o componente. Quatro propriedades bem escolhidas servem melhor que doze exaustivas.",
+          "Documente os estados junto com o componente: padrão, hover, foco, desabilitado, carregando, erro, e o comportamento quando o texto é muito longo. O estado de foco em especial costuma ser esquecido, e é ele que sustenta a navegação por teclado do produto inteiro.",
+          "Escreva também o que o componente não faz. Um bloco de “quando não usar” com dois exemplos evita mais uso indevido do que três páginas explicando o uso correto."
+        ]
+      },
+      {
+        title: "Governança: dizer não é o trabalho",
+        body: [
+          "A parte impopular da curadoria é recusar. Cada exceção aceita sem critério reduz o valor de todas as regras anteriores, porque comunica ao time que a régua é negociável dependendo do prazo.",
+          "Mas recusar sem alternativa é burocracia. A resposta útil tem duas partes: por que não entra agora, e o que fazer nesta sprint. Uma solução local, marcada como temporária, com data para revisão, é melhor que um componente oficial criado às pressas.",
+          "Crie um ritmo previsível — uma revisão quinzenal, curta, com decisões registradas. Previsibilidade reduz ansiedade: quem sabe que a resposta sai em duas semanas espera; quem não sabe, improvisa.",
+          "Meça adoção, não quantidade. Quarenta componentes com uso baixo é um catálogo. Doze com uso alto é um sistema. Se você não consegue dizer qual percentual das telas novas usa a biblioteca, ainda não tem como saber se está funcionando."
+        ]
+      },
+      {
+        title: "Multimarca sem duplicar tudo",
+        body: [
+          "Vender o mesmo produto sob marcas diferentes é comum em pagamentos, em white-label e em qualquer ecossistema de parceiros. O erro clássico é duplicar a biblioteca inteira por marca — a partir daí, toda correção precisa ser feita várias vezes, e as versões divergem em silêncio.",
+          "O caminho que funciona é desacoplar identidade de comportamento. A lógica de interação, a hierarquia da informação e a estrutura dos componentes ficam numa base única. Cor, tipografia, logo, raio e tom de voz ficam numa camada de marca que é trocada por cima.",
+          "Defina cedo o que é negociável por parceiro e o que não é. Cor primária costuma ser negociável. Posição do botão de confirmar numa tela de pagamento não deveria ser — é segurança e memória muscular do operador, não estética.",
+          "Cada marca nova é um teste do sistema. Se lançar a terceira marca exigir o mesmo esforço da primeira, a base não está desacoplada de verdade; está apenas organizada."
+        ]
+      }
+    ]
+  },
+  {
+    id: "influencia",
+    cover: `<svg viewBox="0 0 400 240" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false"><g fill="none" stroke="currentColor"><circle cx="288" cy="120" r="30" stroke-width="1.5" opacity="0.8"/><circle cx="288" cy="120" r="56" stroke-width="1.4" opacity="0.45"/><circle cx="288" cy="120" r="82" stroke-width="1.3" opacity="0.26"/><circle cx="288" cy="120" r="108" stroke-width="1.2" opacity="0.14"/></g><circle cx="288" cy="120" r="9" fill="currentColor"/><g fill="currentColor" opacity="0.5"><circle cx="52" cy="70" r="5"/><circle cx="52" cy="120" r="5"/><circle cx="52" cy="170" r="5"/><circle cx="130" cy="96" r="5"/><circle cx="130" cy="146" r="5"/></g><g stroke="currentColor" stroke-width="1.3" opacity="0.35" fill="none"><path d="M52 70 130 96 206 120"/><path d="M52 120 130 96"/><path d="M52 120 130 146"/><path d="M52 170 130 146 206 120"/></g><circle cx="206" cy="120" r="6" fill="currentColor" opacity="0.8"/></svg>`,
+    level: "Avançado", levelKey: "levelAdvanced",
+    title: "Design perto de quem decide",
+    blurb: "Sobre a parte da senioridade que não aparece no portfólio: influência, priorização e liderança sem cargo.",
+    minutes: 5,
+    chapters: [
+      {
+        title: "O designer na sala de roadmap",
+        body: [
+          "Chega um ponto da carreira em que refinar a interface para de mudar o resultado. O que passa a mudar é estar na conversa em que se decide o que será construído — e essa conversa quase nunca é sobre tela.",
+          "Ser convidado para essa sala não é sorte nem simpatia. É consequência de entregar, com consistência, uma informação que os outros não têm: o que o usuário realmente faz, com evidência, em linguagem de decisão.",
+          "Comece aparecendo com dados de uso e de pesquisa antes de aparecer com proposta. Quem chega com problema bem descrito é ouvido; quem chega com solução pronta é avaliado. São posições muito diferentes na mesa.",
+          "E aceite o incômodo de participar de decisões que não terminam em design. Discussão de precificação, de escopo de contrato e de capacidade de time também molda o produto — e opinar bem nelas é o que consolida seu lugar."
+        ]
+      },
+      {
+        title: "Traduzir design em linguagem de negócio",
+        body: [
+          "“Melhorou a experiência” não é um argumento — é uma conclusão sem premissa. Quem decide orçamento precisa saber o que muda em custo, receita, risco ou tempo.",
+          "Aprenda a fazer a ponte explícita. Menos passos numa jornada operacional vira menos tempo por atendimento. Menos erro de preenchimento vira menos chamado no suporte. Um fluxo de aprovação rastreável vira menos exposição em auditoria. Nenhuma dessas frases exige abandonar o vocabulário de design; exige só terminar o raciocínio.",
+          "Quando não houver número disponível, seja honesto sobre a incerteza e proponha como medir. “Não tenho esse dado, mas se instrumentarmos esta etapa, em um mês saberemos” é uma resposta forte. Inventar estimativa para parecer confiante é a forma mais rápida de perder credibilidade quando o número real aparece.",
+          "Evite também o extremo oposto: transformar toda decisão em métrica. Algumas coisas se fazem porque estão certas — acessibilidade, clareza de linguagem, respeito ao tempo de quem usa. Saber quando não pedir licença faz parte do repertório."
+        ]
+      },
+      {
+        title: "Priorizar quando tudo é urgente",
+        body: [
+          "Times maduros não priorizam por importância — quase tudo é importante. Priorizam por consequência: o que acontece se isso não for feito neste ciclo?",
+          "Uma classificação simples e brutal ajuda: o que quebra a operação de alguém, o que trava dinheiro entrando, o que gera retrabalho recorrente, e o que apenas melhora. As três primeiras categorias competem entre si. A quarta espera, e tudo bem que espere.",
+          "Cuidado com a armadilha do pedido mais alto. A demanda que chega com mais insistência costuma ser a de quem tem mais acesso a você, não a de quem tem mais dor. Compare o volume do pedido com o volume do problema.",
+          "Deixe visível o que ficou de fora e por quê. Uma lista de “não faremos agora” bem mantida evita que a mesma discussão volte toda sprint, e protege o time do sentimento de que nada nunca é decidido."
+        ]
+      },
+      {
+        title: "Levar acessibilidade sem virar o chato",
+        body: [
+          "Acessibilidade tratada como checklist no fim do projeto gera duas coisas: retrabalho e antipatia. Tratada como restrição de design desde o início, ela quase não custa nada — e melhora o produto para todo mundo.",
+          "Traga como decisão técnica concreta, não como princípio moral. “Esse contraste está em 3,1 e precisa de 4,5 para texto” é acionável. “Precisamos ser mais inclusivos” gera concordância e nenhuma mudança no arquivo.",
+          "Escolha as batalhas que rendem mais por esforço: contraste de texto e de bordas de controle, navegação completa por teclado, foco visível, rótulo em todo elemento interativo, e não depender só de cor para comunicar estado. Isso já resolve a maior parte das barreiras reais.",
+          "E leve para dentro do sistema. Um componente com foco visível e rótulo correto por padrão faz acessibilidade acontecer sem depender da disciplina individual de cada pessoa em cada sprint — que é a única forma de isso escalar."
+        ]
+      },
+      {
+        title: "Liderar sem cargo",
+        body: [
+          "Boa parte da liderança em design acontece antes de qualquer promoção, e quase toda ela é invisível: revisar o trabalho de alguém sem passar por cima, manter um padrão quando ninguém está olhando, recusar a exceção fácil.",
+          "Revisar bem é uma habilidade específica. Comece pelo que está funcionando e por quê — não por educação, mas porque a pessoa precisa saber o que preservar. Depois traga no máximo três pontos, ordenados por impacto, e separe o que é bloqueio do que é preferência sua.",
+          "Deixe espaço para a solução do outro ser diferente da sua. Se toda revisão termina com o trabalho parecido com o que você teria feito, você não está formando ninguém — está terceirizando execução.",
+          "E documente o caminho, não só o resultado. As decisões que você registrou, os nãos que você justificou e os padrões que você manteve são o que continua funcionando no time depois que você sai da sala. Esse é o teste real de senioridade."
+        ]
+      }
+    ]
+  }
+];
+
+</script>
+<script>
+/* ============ I18N DICTIONARY ============ */
+const translations = {
+  pt: {
+    sectionTagCases: "cases",
+    casesHeading: "Projetos que sustentam essa fala",
+    casesNote: "Cinco frentes que liderei na Ger7 Sistemas e três plataformas de adquirência no Sicoob. Use as abas para navegar por cliente.",
+    labelProblem: "Problema",
+    labelAction: "Minha atuação",
+    labelResult: "Resultado",
+    tabGer7: "Ger7 Sistemas",
+    tabSicoob: "Sicoob",
+    tabsLabel: "Cases por cliente",
+    tabGer7Count: "5 cases",
+    tabSicoobCount: "3 cases",
+    annTab: "Aba selecionada:",
+    g1Id: "GER7 · 01",
+    g1Title: "Launcher, widgets e Ger7 Store",
+    g1Sub: "Ger7 Sistemas · Android POS · software de terminal",
+    g1Tag1: "Launcher",
+    g1Tag2: "Loja de aplicativos",
+    g1Tag3: "Android POS",
+    g1Problem: "O terminal chega ao lojista como hardware genérico rodando Android puro. Sem uma camada própria, o aparelho se comporta como um tablet: o lojista se perde em ajustes de sistema que não são dele, e cada aplicativo do ecossistema depende de um técnico com o equipamento em mãos para ser instalado.",
+    g1Action: "Liderei essa camada de ponta a ponta, com engenharia e com o time de campo. Uma decisão simples orientou cada tela: tratar o aparelho como produto, não como um Android com aplicativos soltos por cima.",
+    g1Li1: "Home com widgets de relógio, clima e previsão, sobre papel de parede próprio",
+    g1Li2: "Central de controle e ajustes do aparelho no vocabulário do lojista",
+    g1Li3: "Modo técnico atrás de autenticação, separando quem instala de quem vende",
+    g1Li4: "Ger7 Store com catálogo, busca, ficha de aplicativo e atualização no próprio terminal",
+    g1Result: "O terminal ganhou um caminho único e previsível: pagamento, aplicativos e ajustes no mesmo lugar. Publicar ou atualizar um aplicativo deixou de exigir deslocamento até o cliente, e a base de componentes criada aqui virou o ponto de partida das outras frentes.",
+    g1Caption: "Nove telas do launcher e da Ger7 Store. Clique para percorrer a galeria.",
+    g2Id: "GER7 · 02",
+    g2Title: "POS7 — a frente de pagamento do terminal",
+    g2Sub: "Ger7 Sistemas · SmartPOS · fluxo de venda",
+    g2Tag1: "Frente de pagamento",
+    g2Tag2: "SmartPOS",
+    g2Tag3: "Fluxo de venda",
+    g2Problem: "A tela de venda é onde o operador passa o dia inteiro e onde qualquer hesitação vira fila. Ela precisa caber num aparelho de mão, funcionar com pouca luz e a mão ocupada, e não exigir treino formal de quem entra no caixa amanhã.",
+    g2Action: "Desenhei a home de venda para responder três perguntas antes de qualquer toque: o que este aparelho aceita, qual é a ação principal e onde ficam as operações do dia. As bandeiras aceitas ficam visíveis de saída, pagamento e menu ocupam a área de maior alcance do polegar, e Pix, reimpressão e pós-venda entram numa faixa secundária que não compete com a venda.",
+    g2Result: "Um caminho curto até a venda, com as operações de suporte por perto mas nunca no meio. A mesma estrutura sustenta o aparelho de mão e o de balcão, sem redesenhar a tela para cada formato.",
+    g2Caption: "Home do POS7 no terminal Sunmi P2.",
+    g3Id: "GER7 · 03",
+    g3Title: "Tap2Pay — o celular vira a maquininha",
+    g3Sub: "Ger7 Sistemas · pagamento por aproximação sem terminal",
+    g3Tag1: "NFC",
+    g3Tag2: "Onboarding",
+    g3Tag3: "Provisionamento",
+    g3Problem: "Aceitar cartão sem maquininha pede do lojista um gesto que ele nunca fez: encostar o cartão do cliente no próprio telefone. E como a antena NFC fica atrás, a tentativa natural — aproximar na frente da tela — é justamente a que falha. Antes disso ainda existe a etapa que ninguém gosta: identificar o equipamento e vinculá-lo à conta.",
+    g3Action: "Tratei a instrução como parte do fluxo, não como texto de ajuda em outro lugar. O gesto correto vive na tela em que ele acontece, com ilustração das duas mãos na posição certa, destaque tipográfico em “parte de trás do celular” e progresso visível de quantas etapas faltam. O onboarding e o vínculo do equipamento entraram no mesmo padrão: uma decisão por tela, sempre com saída visível.",
+    g3Result: "A dúvida passou a ser respondida onde ela nasce. É uma correção barata de fazer no desenho e cara de descobrir depois, quando já virou chamado de suporte.",
+    g3Caption: "Etapa de aproximação do Tap2Pay.",
+    g4Id: "GER7 · 04",
+    g4Title: "Autoatendimento no totem",
+    g4Sub: "Ger7 Sistemas · Mobbuy · totem Gertec SK210",
+    g4Tag1: "Autoatendimento",
+    g4Tag2: "Quiosque",
+    g4Tag3: "Tela ociosa",
+    g4Problem: "O totem fica sozinho num corredor e ninguém explica o que ele faz. Se a tela parada não convencer em poucos segundos, a pessoa passa reto — e quem para não tem atendente ao lado para tirar dúvida.",
+    g4Action: "Liderei a jornada a partir de uma inversão simples: o estado que mais aparece no dia não é nenhuma tela de fluxo, é a tela parada. Comecei por ela e desenhei o resto a partir dali, com carrossel de chamadas, ilustração própria por serviço e alvos de toque dimensionados para uso em pé.",
+    g4Result: "A tela parada virou vitrine. Em vez de um botão sozinho num fundo branco, o totem mostra em rodízio o que resolve — IPVA, boleto e recarga — e só depois convida a começar. A pessoa entende o que ganha antes de precisar tocar em qualquer coisa.",
+    g4Caption: "Tela ociosa em movimento. O carrossel roda de verdade: são as três chamadas alternando.",
+    g5Id: "GER7 · 05",
+    g5Title: "Ger7 Design System",
+    g5Sub: "Ger7 Sistemas · tokens, componentes e ícones",
+    g5Tag1: "Design Tokens",
+    g5Tag2: "Componentes",
+    g5Tag3: "Acessibilidade",
+    g5Problem: "Launcher, loja e frente de pagamento eram construídos por frentes diferentes, em ritmos diferentes. Sem base comum, o mesmo botão nascia com três alturas, o laranja da marca aparecia em quatro tons e cada tela resolvia espaçamento no olho.",
+    g5Action: "Propus e conduzi o sistema a partir do que já rodava em produção, em vez de começar de uma folha em branco. Amostrei as telas existentes, medi os contrastes reais e devolvi ao time uma base já decidida.",
+    g5Li1: "Escala neutra de oito degraus e cor de marca em quatro estados, com contraste medido",
+    g5Li2: "Escala tipográfica curta o bastante para o time decorar, com piso de 15px no corpo",
+    g5Li3: "Componentes documentados com todos os estados — inclusive foco, erro e vazio",
+    g5Li4: "Caminho combinado para o caso excepcional, com prazo de resposta conhecido",
+    g5Result: "A base passou a decidir antes da tela. O laranja virou sinal de ação e nada mais, o alvo de toque virou regra de 48px em vez de discussão por sprint, e produto novo começa da biblioteca.",
+    g5Caption: "Quatro painéis do sistema. As cores foram amostradas das telas em produção — o laranja #ED7B22 tem 7,4:1 sobre preto.",
+    s1Id: "SICOOB · 01",
+    s1Title: "Sipag — a frente de captura no terminal",
+    s1Sub: "Sicoob Confederação · SmartPOS",
+    s1Tag1: "Frente de captura",
+    s1Tag2: "Terminal",
+    s1Tag3: "Pós-venda",
+    s1Problem: "A cooperativa entrega a maquininha para lojistas de perfis muito diferentes, da padaria ao consultório, sem treinamento presencial. A tela inicial precisa ser autoexplicativa para quem nunca operou um terminal e rápida para quem opera o dia inteiro.",
+    s1Action: "Desenhei a home de captura em torno de uma única pergunta: qual é o valor da venda. O teclado de valor ocupa o centro, as bandeiras aceitas pela instituição aparecem sem que seja preciso procurar, e pós-venda e menu ficam na base, ao alcance do polegar mas fora do caminho da venda.",
+    s1Result: "Uma tela que ensina enquanto é usada. Quem opera pela primeira vez consegue concluir uma venda sem instrução externa, e quem opera todo dia chega ao valor em um toque.",
+    s1Caption: "Tela inicial do Sipag no terminal.",
+    s2Id: "SICOOB · 02",
+    s2Title: "Gestão de Logística de Terminais",
+    s2Sub: "Sicoob Confederação · Sisbr · plataforma interna",
+    s2Tag1: "Plataforma B2B",
+    s2Tag2: "Estoque",
+    s2Tag3: "Alçada de aprovação",
+    s2Problem: "A rede de cooperativas precisava planejar, distribuir e aprovar terminais de pagamento. O processo vivia fragmentado entre planilhas, aprovações combinadas por fora do sistema e times que não enxergavam o mesmo número de estoque.",
+    s2Action: "Liderei o desenho de ponta a ponta, conduzindo a pesquisa com quem opera o processo e alinhando cada decisão com PMs, engenharia e as áreas de negócio.",
+    s2Li1: "Planejamento de consumo e estoque por cooperativa e ponto de atendimento",
+    s2Li2: "Fluxo de alçada entre times, com rastreabilidade do pedido até a aprovação final",
+    s2Li3: "Indicadores de pendente, em trânsito e disponível na mesma leitura",
+    s2Li4: "Configuração de parâmetros e ordens de serviço no mesmo módulo",
+    s2Result: "Um fluxo único, testado com os usuários operacionais, que substitui etapas manuais por decisões guiadas dentro do produto. A aprovação deixou de ser combinada por fora e passou a ter registro.",
+    s2Caption: "Painel de Controle do planejamento, no Sisbr.",
+    s3Id: "SICOOB · 03",
+    s3Title: "Gestão de Ciclo de Vida do estabelecimento",
+    s3Sub: "Sicoob Confederação · Sisbr · plataforma interna",
+    s3Tag1: "Plataforma B2B",
+    s3Tag2: "Inatividade",
+    s3Tag3: "Retenção",
+    s3Problem: "Um estabelecimento que para de transacionar raramente avisa. Quando a perda aparece no fechamento do mês, já não há o que fazer — e a informação existia, espalhada entre relatórios que ninguém abria toda semana.",
+    s3Action: "Desenhei o painel em torno do tempo, não do volume: as faixas de inatividade por número de dias organizam a lista antes de qualquer filtro, para que a equipe veja primeiro quem ainda dá para recuperar.",
+    s3Result: "A inatividade passou a aparecer enquanto ainda há prazo de reação, em vez de virar número no fechamento. A mesma tela serve para diagnóstico e para ação, sem exportar nada.",
+    s3Caption: "Painel de Inatividade do Ciclo de Vida, no Sisbr.",
+    sgWidgets: "Widgets",
+    sgControles: "Central de controle",
+    sgTecnico: "Acesso técnico",
+    sgConfig: "Configurações",
+    sgStoreHome: "Store · home",
+    sgBusca: "Busca",
+    sgApp: "Ficha do app",
+    sgMenu: "Menu",
+    sgSobre: "Sobre",
+    sgPos7: "POS7 · tela",
+    sgPos7P2: "POS7 · Sunmi P2",
+    sgTap: "Aproximação",
+    sgOcioso: "Tela ociosa · animada",
+    sgTotem: "Totem SK210",
+    sgDsCor: "Cor",
+    sgDsTipo: "Tipografia",
+    sgDsComp: "Componentes",
+    sgDsIcon: "Ícones",
+    sgSipag: "Sipag",
+    sgLogistica: "Logística · painel",
+    sgCiclo: "Ciclo de vida · inatividade",
+    sgWidgetsAlt: "Home do launcher Ger7 com widgets de relógio, clima, umidade e previsão do dia sobre o papel de parede do terminal.",
+    sgControlesAlt: "Central de controle do launcher Ger7: Wi-Fi, Bluetooth, tempo de tela, brilho e volume em acesso rápido.",
+    sgTecnicoAlt: "Modal de autenticação técnica sobre a central de controle, separando o acesso do técnico do acesso do lojista.",
+    sgConfigAlt: "Lista de configurações do aparelho no launcher Ger7: rede, dados, VPN, launcher padrão, barra de status, tela e impressora.",
+    sgStoreHomeAlt: "Home da Ger7 Store com o catálogo de aplicativos do terminal e os estados instalar, atualizar e desinstalar.",
+    sgBuscaAlt: "Busca de aplicativos na Ger7 Store, com o teclado do terminal e o estado vazio orientando a digitação.",
+    sgAppAlt: "Ficha de aplicativo na Ger7 Store: versão, tamanho, data de atualização, prévia de telas e descrição.",
+    sgMenuAlt: "Menu da Ger7 Store com modo escuro, seleção de idioma e acesso a sobre e perguntas frequentes.",
+    sgSobreAlt: "Tela Sobre da Ger7 Store, com informações do aplicativo, canais de suporte e o acesso do técnico.",
+    sgPos7Alt: "Tela inicial do POS7: bandeiras aceitas, atalhos de pagamento e menu, com Pix, reimpressão e ajustes na faixa inferior.",
+    sgPos7P2Alt: "Terminal Sunmi P2 da Ger7 com a tela inicial do POS7: impressora térmica laranja no topo, área de aproximação e atalhos de pagamento, menu, Pix, reimpressão e pós-venda.",
+    sgTapAlt: "Tela Tap on Phone no celular: ilustração de uma mão aproximando o cartão da parte de trás de outro telefone, com a instrução em destaque e indicador de etapas.",
+    sgOciosoAlt: "Tela ociosa do totem em movimento: as três chamadas de serviço alternam em carrossel — quitação de IPVA, pagamento de boletos e recarga de créditos — acima do botão Começar.",
+    sgTotemAlt: "Totem de autoatendimento Gertec SK210 com a tela inicial do Mobbuy, impressora na base e leitor de aproximação.",
+    sgDsCorAlt: "Painel de cor do Ger7 Design System: escala neutra de oito degraus, quatro estados da cor de marca laranja e uma tabela de contraste verificado.",
+    sgDsTipoAlt: "Painel de tipografia do Ger7 Design System: seis níveis da escala, do display ao micro, com alvos de leitura e de toque.",
+    sgDsCompAlt: "Painel de componentes do Ger7 Design System: estados de botão, linha de lista, chip de filtro, campo de busca, interruptor e escala de espaçamento base 4.",
+    sgDsIconAlt: "Painel de ícones do Ger7 Design System: oito ícones desenhados em grade de 24 pixels com traço de 2 pixels.",
+    sgSipagAlt: "Tela inicial do Sipag: campo de valor da venda, bandeiras aceitas pela instituição e acesso a pós-venda e menu.",
+    sgLogisticaAlt: "Painel de Controle da Gestão de Logística no Sisbr: filtros por central e cooperativa, indicadores de estoque e tabela por ponto de atendimento.",
+    sgCicloAlt: "Painel de Inatividade da Gestão de Ciclo de Vida no Sisbr: faixas de inatividade por período e lista de estabelecimentos sem transacionar.",
+    devTapAlt: "Celular exibindo a tela de aproximação do Tap on Phone.",
+    devSisbrAlt: "Plataforma interna do Sisbr aberta no navegador, com o Painel de Controle da Gestão de Logística.",
+    devDsAlt: "Cartão-resumo do Ger7 Design System: paleta, escala tipográfica, um componente e a escala de espaçamento.",
+    deviceP2: "Terminal Sunmi P2",
+    deviceTap: "Celular como leitor",
+    deviceTotem: "Totem Gertec SK210",
+    deviceDs: "Cartão do sistema",
+    deviceSisbr: "Plataforma no navegador",
+    lightboxLabel: "Galeria de telas do projeto",
+    lightboxOpen: "Abrir a imagem original em nova aba",
+    lightboxClose: "Fechar a galeria",
+    lightboxPrev: "Tela anterior",
+    lightboxNext: "Próxima tela",
+    lightboxOf: "Tela {c} de {t}.",
+    highlightsNote: "Onde minha atuação muda o resultado do produto, não só a tela.",
+    h1Title: "Do problema ao componente em produção",
+    h1Text: "Conduzo pesquisa, mapeamento e jornada até protótipos navegáveis de alta fidelidade — e sigo com o time até a implementação, porque a decisão de design que não sobrevive à entrega não resolveu nada.",
+    h2Title: "Bases que decidem antes da tela",
+    h2Text: "Estruturo design systems a partir do que já roda em produção, com contraste medido e estados documentados. O objetivo não é padronizar por padronizar: é tirar do caminho de cada squad as decisões que já foram tomadas.",
+    h3Title: "Perto de quem decide o roadmap",
+    h3Text: "Trabalho lado a lado com POs, PMs e engenharia para equilibrar viabilidade, estratégia e experiência — e levo a discussão para o problema antes de ela virar discussão de tela.",
+    a11yThemeSwitch: "Tema claro ou escuro",
+    a11yThemeLight: "Ativar modo claro",
+    a11yThemeDark: "Ativar modo escuro",
+    annThemeLight: "Modo claro ativado.",
+    annThemeDark: "Modo escuro ativado.",
+    wordmark: "Mateus Cherem — Senior Product Designer",
+    navImpact: "impacto", navCases: "cases", navAbout: "sobre", navContact: "contato",
+    heroH1: 'Design que precisa <span class="accent">funcionar em produção</span>, não só na apresentação.',
+    heroLede: "31 anos, São Paulo. Há mais de 6 anos desenhando sistemas de pagamento e logística de terminais — do wireframe ao componente em produção, sempre perto de quem decide o roadmap.",
+    ctaPrimary: "Falar comigo", ctaSecondary: "Ver os cases →",
+    terminalLabel: "sessão · perfil.log",
+    tLine0: "&gt; carregando perfil...",
+    tLine5: 'atual   <span class="hl">Sicoob</span> — Sist. de Pagamentos',
+    tLine6: "desde   nov/2024 (4a5m na conta)",
+    tLine9: "formação  MBA USP/Esalq — Gestão &",
+    tLine10: "          IA · Design, IMT Mauá",
+    tLine12: 'foco    <span class="hl">design systems</span>, produtos',
+    tLine13: "        multi-plataforma, liderança",
+    tLine14: "        de squads de design",
+    tLine17: 'fim do registro <span class="cursor"></span>',
+    sectionTagImpact: "impacto",
+    highlightsHeading: "O que eu levo para uma squad quando entro",
+    h1Tag: "ponta a ponta",
+    h2Tag: "design systems",
+    h3Tag: "negócio",
+    sectionTagAbout: "sobre", aboutHeading: "Como eu penso design, times e produto",
+    aboutP1: "Comecei em branding, na <strong>Neurona Marcas Inteligentes</strong>, entendendo como uma marca se traduz em experiência antes mesmo de virar interface. Isso ainda molda como eu penso produto hoje: toda decisão de UI carrega um posicionamento por trás, mesmo quando ninguém está olhando para isso diretamente.",
+    aboutP2: "Passei pela <strong>4BIO Medicamentos Especiais</strong>, dentro do Grupo Raia Drogasil, ajudando a expandir novos negócios digitais junto com times de tecnologia. Hoje, no <strong>Sicoob</strong>, lidero projetos de ponta a ponta na área de Sistemas de Pagamentos e Ecossistemas Digitais — de pesquisa a protótipo validado, sempre em contato direto com PMs e POs.",
+    aboutP3: "Estou cursando o <strong>MBA USP/Esalq em Gestão de Negócios Digitais e Inteligência Artificial</strong>, porque acho que o próximo salto de senioridade em design não vem só de UI mais refinada — vem de entender melhor o negócio e as ferramentas que estão mudando como produtos são construídos.",
+    principle1H: "Design é decisão de negócio, não só de tela",
+    principle1P: "Uma interface bonita que não resolve a alçada de aprovação certa, ou não se encaixa na estratégia da marca, não é um bom design — é um mockup caro.",
+    principle2H: "Sistema antes de tela",
+    principle2P: "Prefiro resolver o componente que se repete cem vezes do que a tela única e bonita. É onde a consistência — e a velocidade do time — realmente se ganha.",
+    principle3H: "Perto de quem decide",
+    principle3P: "Prototipar rápido só importa se a decisão certa acontecer com a pessoa certa na sala. Cultivo esse acesso deliberadamente, não como sorte de projeto.",
+    principle4H: "Curadoria é liderança",
+    principle4P: "Manter um design system vivo é um trabalho de liderança silenciosa: dizer não a exceções, para que a exceção certa, quando chegar, ainda faça sentido.",
+    tl1H: "MBA USP/Esalq — Gestão de Negócios Digitais e IA", tl1P: "Em andamento",
+    tl2H: "Sicoob Confederação — Senior Product Designer", tl2P: "Adquirência, Sistemas de Pagamentos e Logística de Terminais",
+    tl3H: "4BIO Medicamentos Especiais (Grupo Raia Drogasil) — Product Designer Pleno", tl3P: "Branding e expansão de novos negócios digitais",
+    tl4H: "Neurona Marcas Inteligentes — Designer Jr.", tl4P: "São Paulo e região",
+    tl5H: "IMT Mauá — Bacharelado em Design", tl5P: "Instituto Mauá de Tecnologia",
+    footerHeading: "Um recorte do trabalho que venho fazendo em pagamentos, terminais e design systems.",
+    footerResume: "baixar currículo (pdf)",
+    footerCopyright: "© 2026 Mateus Cherem", footerLocation: "São Paulo, Brasil",
+    a11ySkipLink: "Pular para o conteúdo principal",
+    a11yContrastOn: "Ativar alto contraste", a11yContrastOff: "Desativar alto contraste",
+    a11yNarrateStart: "Ouvir o conteúdo da página", a11yNarrateStop: "Parar narração",
+    a11yNarrateUnsupported: "Seu navegador não tem suporte para narração de voz.",
+    navMentorias: "mentorias",
+    sectionTagMentorias: "mentorias",
+    mentoriasHeading: "E-books curtos sobre o ofício",
+    mentoriasNote: "Passo a passo do que aprendi na prática, do básico ao avançado. Leia na tela ou ouça em áudio.",
+    trackExperience: "Experiência profissional", trackEducation: "Formação",
+    tl6H: "Ohio University — Strategic Marketing Management", tl6P: "Certificação internacional",
+    tl7H: "Ohio University — Business English", tl7P: "Certificação internacional",
+    levelBasic: "Básico", levelIntermediate: "Intermediário", levelAdvanced: "Avançado",
+    bookChapters: "capítulos", bookMinutes: "min de leitura",
+    readerClose: "Fechar o leitor", readerToc: "Capítulos",
+    readerPrev: "Anterior", readerNext: "Próximo",
+    readerPrevAria: "Capítulo anterior", readerNextAria: "Próximo capítulo",
+    readerAudioPlay: "Ouvir", readerAudioPause: "Pausar", readerAudioResume: "Retomar", readerAudioStop: "Parar o áudio",
+    readerProgress: "Capítulo {c} de {t}",
+    readerLangNote: "Os e-books estão disponíveis apenas em português. O áudio também é narrado em português.",
+    annBookOpen: "Leitor aberto:", annChapter: "Capítulo:",
+    annAudioStart: "Audiobook iniciado.", annAudioStop: "Audiobook encerrado.", annBookEnd: "Fim do e-book.",
+    notFoundHeading: "Essa página não existe.",
+    notFoundText: "O endereço pode ter mudado. Os cases, a seção sobre e as mentorias continuam no menu acima.",
+    notFoundCta: "Voltar ao início",
+    a11yLangGroup: "Seletor de idioma", a11yMainNav: "Navegação principal", a11yHero: "Introdução",
+    a11yToolbar: "Ferramentas de acessibilidade",
+    a11yTextSizeOn: "Aumentar o tamanho do texto", a11yTextSizeOff: "Voltar ao tamanho normal do texto",
+    a11yNarratePause: "Pausar narração", a11yNarrateResume: "Retomar narração",
+    a11yMenuOpen: "Abrir menu de navegação", a11yMenuClose: "Fechar menu de navegação",
+    copyLabel: "copiar", copyDone: "copiado",
+    annContrastOn: "Alto contraste ativado.", annContrastOff: "Alto contraste desativado.",
+    annTextOn: "Texto ampliado.", annTextOff: "Texto no tamanho normal.",
+    annNarrateStart: "Narração iniciada.", annNarrateStop: "Narração encerrada.",
+    annNarratePause: "Narração pausada.", annNarrateResume: "Narração retomada.",
+    annNarrateEnd: "Fim da narração.",
+    annCopied: "E-mail copiado para a área de transferência.",
+    annCopyFail: "Não foi possível copiar. Selecione o e-mail manualmente.",
+    annLang: "Idioma alterado para Português.",
+    annSection: "Lendo:"
+  },
+  en: {
+    sectionTagCases: "case studies",
+    casesHeading: "Projects that back this up",
+    casesNote: "Five streams I led at Ger7 Sistemas and three acquiring platforms at Sicoob. Use the tabs to browse by client.",
+    labelProblem: "Problem",
+    labelAction: "My role",
+    labelResult: "Outcome",
+    tabGer7: "Ger7 Sistemas",
+    tabSicoob: "Sicoob",
+    tabsLabel: "Case studies by client",
+    tabGer7Count: "5 cases",
+    tabSicoobCount: "3 cases",
+    annTab: "Tab selected:",
+    g1Id: "GER7 · 01",
+    g1Title: "Launcher, widgets and the Ger7 Store",
+    g1Sub: "Ger7 Sistemas · Android POS · terminal software",
+    g1Tag1: "Launcher",
+    g1Tag2: "App store",
+    g1Tag3: "Android POS",
+    g1Problem: "The terminal reaches the merchant as generic hardware running plain Android. With no layer of its own it behaves like a tablet: the merchant gets lost in system settings that aren't theirs, and every app in the ecosystem needs a technician holding the device to be installed.",
+    g1Action: "I led this layer end to end, with engineering and the field team. One simple decision drove every screen: treat the device as a product, not as Android with apps scattered on top.",
+    g1Li1: "Home with clock, weather and forecast widgets over a wallpaper of its own",
+    g1Li2: "Control centre and device settings in the merchant's vocabulary",
+    g1Li3: "Technician mode behind authentication, separating whoever installs from whoever sells",
+    g1Li4: "Ger7 Store with catalogue, search, app detail and updates on the terminal itself",
+    g1Result: "The terminal gained a single, predictable path: payments, apps and settings in one place. Publishing or updating an app no longer requires travelling to the customer, and the component base built here became the starting point for the other streams.",
+    g1Caption: "Nine screens from the launcher and the Ger7 Store. Click to browse the gallery.",
+    g2Id: "GER7 · 02",
+    g2Title: "POS7 — the terminal's payment front end",
+    g2Sub: "Ger7 Sistemas · SmartPOS · sale flow",
+    g2Tag1: "Payment front end",
+    g2Tag2: "SmartPOS",
+    g2Tag3: "Sale flow",
+    g2Problem: "The sale screen is where the operator spends the whole day and where any hesitation becomes a queue. It has to fit a handheld device, work in poor light with one hand busy, and require no formal training from whoever joins the till tomorrow.",
+    g2Action: "I designed the sale home to answer three questions before any tap: what this device accepts, what the primary action is, and where the day's operations live. Accepted card schemes are visible from the start, payment and menu sit in the thumb's easiest reach, and Pix, reprint and after-sales go into a secondary band that never competes with the sale.",
+    g2Result: "A short path to the sale, with support operations nearby but never in the way. The same structure carries the handheld and the counter device without redesigning the screen per form factor.",
+    g2Caption: "POS7 home on the Sunmi P2 terminal.",
+    g3Id: "GER7 · 03",
+    g3Title: "Tap2Pay — the phone becomes the card reader",
+    g3Sub: "Ger7 Sistemas · contactless payment without a terminal",
+    g3Tag1: "NFC",
+    g3Tag2: "Onboarding",
+    g3Tag3: "Device provisioning",
+    g3Problem: "Taking cards without a terminal asks the merchant for a gesture they have never made: holding the customer's card against their own phone. And since the NFC antenna sits at the back, the natural attempt — tapping the front of the screen — is the one that fails. Before that comes the step nobody enjoys: identifying the device and linking it to the account.",
+    g3Action: "I treated the instruction as part of the flow, not as help text somewhere else. The correct gesture lives on the screen where it happens, with an illustration of both hands in position, typographic emphasis on “the back of the phone”, and a visible count of the steps remaining. Onboarding and device linking follow the same pattern: one decision per screen, always with a visible way out.",
+    g3Result: "The doubt is answered where it appears. It's a cheap fix in design and an expensive one to discover later, once it has already become a support ticket.",
+    g3Caption: "The tap step in Tap2Pay.",
+    g4Id: "GER7 · 04",
+    g4Title: "Self-service on the kiosk",
+    g4Sub: "Ger7 Sistemas · Mobbuy · Gertec SK210 kiosk",
+    g4Tag1: "Self-service",
+    g4Tag2: "Kiosk",
+    g4Tag3: "Idle screen",
+    g4Problem: "The kiosk stands alone in a corridor and nobody explains what it does. If the still screen doesn't convince within a few seconds people walk past — and those who stop have no attendant beside them.",
+    g4Action: "I led the journey from one simple inversion: the state that shows up most during the day isn't any flow screen, it's the still one. I started there and designed the rest outward, with a carousel of prompts, a dedicated illustration per service, and touch targets sized for standing use.",
+    g4Result: "The still screen became a shop window. Instead of one lone button on white, the kiosk rotates through what it solves — vehicle tax, bills and top-ups — and only then invites you to start.",
+    g4Caption: "The idle screen in motion. The carousel actually runs: three prompts alternating.",
+    g5Id: "GER7 · 05",
+    g5Title: "Ger7 Design System",
+    g5Sub: "Ger7 Sistemas · tokens, components and icons",
+    g5Tag1: "Design Tokens",
+    g5Tag2: "Components",
+    g5Tag3: "Accessibility",
+    g5Problem: "Launcher, store and payment front end were built by different streams at different speeds. With no common base the same button was born with three heights, the brand orange showed up in four shades, and every screen solved spacing by eye.",
+    g5Action: "I proposed and led the system starting from what was already running in production rather than from a blank page. I sampled the existing screens, measured the real contrast values and handed the team a base already decided.",
+    g5Li1: "Eight-step neutral scale and brand colour in four states, with measured contrast",
+    g5Li2: "A type scale short enough for the team to memorise, with a 15px floor for body text",
+    g5Li3: "Components documented with every state — including focus, error and empty",
+    g5Li4: "An agreed route for the exceptional case, with a known response time",
+    g5Result: "The base started deciding before the screen did. Orange came to mean action and nothing else, the touch target became a 48px rule instead of a per-sprint debate, and new products start from the library.",
+    g5Caption: "Four panels from the system. Colours were sampled from the screens in production — the orange #ED7B22 sits at 7.4:1 on black.",
+    s1Id: "SICOOB · 01",
+    s1Title: "Sipag — the capture front end on the terminal",
+    s1Sub: "Sicoob Confederação · SmartPOS",
+    s1Tag1: "Capture front end",
+    s1Tag2: "Terminal",
+    s1Tag3: "After-sales",
+    s1Problem: "The cooperative hands the terminal to merchants of very different profiles, from bakeries to clinics, with no in-person training. The home screen has to be self-explanatory for someone who has never operated a terminal and fast for someone who operates it all day.",
+    s1Action: "I designed the capture home around a single question: what is the sale amount. The keypad takes the centre, the card schemes accepted by the institution appear without having to be hunted for, and after-sales and menu sit at the base — within thumb reach but out of the sale's way.",
+    s1Result: "A screen that teaches while it is used. A first-time operator completes a sale with no external instruction, and a daily operator reaches the amount in one tap.",
+    s1Caption: "Sipag home screen on the terminal.",
+    s2Id: "SICOOB · 02",
+    s2Title: "Terminal Logistics Management",
+    s2Sub: "Sicoob Confederação · Sisbr · internal platform",
+    s2Tag1: "B2B Platform",
+    s2Tag2: "Stock",
+    s2Tag3: "Approval workflow",
+    s2Problem: "The network of cooperatives needed to plan, distribute and approve payment terminals. The process was fragmented across spreadsheets, approvals agreed outside the system, and teams that never saw the same stock number.",
+    s2Action: "I led the end-to-end design, running the research with the people who operate the process and aligning every decision with PMs, engineering and the business areas.",
+    s2Li1: "Consumption planning and stock per cooperative and service point",
+    s2Li2: "Cross-team approval workflow, traceable from request to final sign-off",
+    s2Li3: "Pending, in transit and available indicators in a single reading",
+    s2Li4: "Parameter configuration and service orders in the same module",
+    s2Result: "A single flow, tested with operational users, replacing manual steps with guided in-product decisions. Approval stopped being agreed outside the system and started leaving a record.",
+    s2Caption: "The planning control panel in Sisbr.",
+    s3Id: "SICOOB · 03",
+    s3Title: "Merchant Lifecycle Management",
+    s3Sub: "Sicoob Confederação · Sisbr · internal platform",
+    s3Tag1: "B2B Platform",
+    s3Tag2: "Inactivity",
+    s3Tag3: "Retention",
+    s3Problem: "A merchant that stops transacting rarely says so. By the time the loss shows up at month end there is nothing left to do — and the information existed all along, scattered across reports nobody opened weekly.",
+    s3Action: "I designed the panel around time rather than volume: inactivity bands by number of days organise the list before any filter, so the team first sees who can still be recovered.",
+    s3Result: "Inactivity started surfacing while there is still time to react, instead of becoming a number at month end. The same screen serves diagnosis and action, with nothing to export.",
+    s3Caption: "The Lifecycle inactivity panel in Sisbr.",
+    sgWidgets: "Widgets",
+    sgControles: "Control centre",
+    sgTecnico: "Technician access",
+    sgConfig: "Settings",
+    sgStoreHome: "Store · home",
+    sgBusca: "Search",
+    sgApp: "App detail",
+    sgMenu: "Menu",
+    sgSobre: "About",
+    sgPos7: "POS7 · screen",
+    sgPos7P2: "POS7 · Sunmi P2",
+    sgTap: "Tap step",
+    sgOcioso: "Idle screen · animated",
+    sgTotem: "SK210 kiosk",
+    sgDsCor: "Colour",
+    sgDsTipo: "Typography",
+    sgDsComp: "Components",
+    sgDsIcon: "Icons",
+    sgSipag: "Sipag",
+    sgLogistica: "Logistics · panel",
+    sgCiclo: "Lifecycle · inactivity",
+    sgWidgetsAlt: "Ger7 launcher home with clock, weather, humidity and daily forecast widgets over the terminal wallpaper.",
+    sgControlesAlt: "Ger7 launcher control centre: Wi-Fi, Bluetooth, screen timeout, brightness and volume in quick reach.",
+    sgTecnicoAlt: "Technician authentication modal over the control centre, separating technician access from merchant access.",
+    sgConfigAlt: "Device settings list in the Ger7 launcher: network, data, VPN, default launcher, status bar, display and printer.",
+    sgStoreHomeAlt: "Ger7 Store home with the terminal app catalogue and the install, update and uninstall states.",
+    sgBuscaAlt: "App search in the Ger7 Store, with the terminal keyboard and an empty state prompting the user to type.",
+    sgAppAlt: "App detail in the Ger7 Store: version, size, update date, screen previews and description.",
+    sgMenuAlt: "Ger7 Store menu with dark mode, language selection and access to about and frequently asked questions.",
+    sgSobreAlt: "Ger7 Store About screen, with app information, support channels and the technician entry point.",
+    sgPos7Alt: "POS7 home screen: accepted card schemes, payment and menu shortcuts, with Pix, reprint and settings along the bottom.",
+    sgPos7P2Alt: "Ger7 Sunmi P2 terminal showing the POS7 home screen: orange thermal printer on top, contactless area, and shortcuts for payment, menu, Pix, reprint and after-sales.",
+    sgTapAlt: "Tap on Phone screen: an illustration of a hand holding a card against the back of another phone, with the instruction emphasised and a step indicator.",
+    sgOciosoAlt: "The kiosk idle screen in motion: three service prompts alternate in a carousel — vehicle tax, bill payment and phone top-up — above the Start button.",
+    sgTotemAlt: "Gertec SK210 self-service kiosk showing the Mobbuy home screen, with printer at the base and contactless reader.",
+    sgDsCorAlt: "Ger7 Design System colour panel: eight-step neutral scale, four states of the orange brand colour and a verified contrast table.",
+    sgDsTipoAlt: "Ger7 Design System typography panel: six levels of the scale, from display to micro, with reading and touch targets.",
+    sgDsCompAlt: "Ger7 Design System components panel: button states, list row, filter chip, search field, toggle and a base-4 spacing scale.",
+    sgDsIconAlt: "Ger7 Design System icon panel: eight icons drawn on a 24 pixel grid with 2 pixel strokes.",
+    sgSipagAlt: "Sipag home screen: sale amount field, card schemes accepted by the institution, and access to after-sales and menu.",
+    sgLogisticaAlt: "Logistics Management control panel in Sisbr: filters by central and cooperative, stock indicators and a table per service point.",
+    sgCicloAlt: "Lifecycle Management inactivity panel in Sisbr: inactivity bands by period and a list of merchants that stopped transacting.",
+    devTapAlt: "Phone showing the Tap on Phone tap screen.",
+    devSisbrAlt: "Internal Sisbr platform open in a browser, showing the Logistics Management control panel.",
+    devDsAlt: "Summary card of the Ger7 Design System: palette, type scale, one component and the spacing scale.",
+    deviceP2: "Sunmi P2 terminal",
+    deviceTap: "Phone as the reader",
+    deviceTotem: "Gertec SK210 kiosk",
+    deviceDs: "System card",
+    deviceSisbr: "Platform in the browser",
+    lightboxLabel: "Project screen gallery",
+    lightboxOpen: "Open the original image in a new tab",
+    lightboxClose: "Close the gallery",
+    lightboxPrev: "Previous screen",
+    lightboxNext: "Next screen",
+    lightboxOf: "Screen {c} of {t}.",
+    highlightsNote: "Where my work changes the product's outcome, not just the screen.",
+    h1Title: "From the problem to the component in production",
+    h1Text: "I run research, mapping and journeys through to high-fidelity interactive prototypes — and stay with the team through implementation, because a design decision that doesn't survive delivery solved nothing.",
+    h2Title: "Foundations that decide before the screen does",
+    h2Text: "I build design systems out of what is already running in production, with measured contrast and documented states. The goal isn't standardising for its own sake: it's clearing decisions off each squad's path that were already made.",
+    h3Title: "Close to whoever owns the roadmap",
+    h3Text: "I work alongside POs, PMs and engineering to balance feasibility, strategy and experience — and I move the discussion to the problem before it becomes a discussion about a screen.",
+    a11yThemeSwitch: "Light or dark theme",
+    a11yThemeLight: "Switch to light mode",
+    a11yThemeDark: "Switch to dark mode",
+    annThemeLight: "Light mode on.",
+    annThemeDark: "Dark mode on.",
+    wordmark: "Mateus Cherem — Senior Product Designer",
+    navImpact: "impact", navCases: "case studies", navAbout: "about", navContact: "contact",
+    heroH1: 'Design that has to <span class="accent">hold up in production</span>, not just in the deck.',
+    heroLede: "31 years old, based in São Paulo. For 6+ years I've designed payment systems and terminal logistics platforms — from wireframe to shipped component, always close to whoever owns the roadmap.",
+    ctaPrimary: "Get in touch", ctaSecondary: "See the case studies →",
+    terminalLabel: "session · profile.log",
+    tLine0: "&gt; loading profile...",
+    tLine5: 'current   <span class="hl">Sicoob</span> — Payment Systems',
+    tLine6: "since   nov/2024 (4y5m on file)",
+    tLine9: "education  MBA USP/Esalq — Management &",
+    tLine10: "           AI · Design, IMT Mauá",
+    tLine12: 'focus    <span class="hl">design systems</span>, products',
+    tLine13: "         multi-platform, leadership",
+    tLine14: "         of design squads",
+    tLine17: 'end of record <span class="cursor"></span>',
+    sectionTagImpact: "impact",
+    highlightsHeading: "What I bring into a squad on day one",
+    h1Tag: "end to end",
+    h2Tag: "design systems",
+    h3Tag: "business",
+    sectionTagAbout: "about", aboutHeading: "How I think about design, teams and product",
+    aboutP1: "I started in branding, at <strong>Neurona Marcas Inteligentes</strong>, learning how a brand translates into experience before it ever becomes an interface. That still shapes how I think about product today: every UI decision carries a positioning behind it, even when no one is looking at it directly.",
+    aboutP2: "I spent time at <strong>4BIO Medicamentos Especiais</strong>, part of Grupo Raia Drogasil, helping expand new digital businesses alongside technology teams. Today, at <strong>Sicoob</strong>, I lead end-to-end projects in Payment Systems and Digital Ecosystems — from research to validated prototype, always in direct contact with PMs and POs.",
+    aboutP3: "I'm currently pursuing an <strong>MBA in Digital Business and AI Management at USP/Esalq</strong>, because I believe the next step up in design seniority doesn't come from more polished UI alone — it comes from understanding the business, and the tools that are changing how products get built.",
+    principle1H: "Design is a business decision, not just a screen",
+    principle1P: "A beautiful interface that doesn't solve the right approval workflow, or doesn't fit the brand's strategy, isn't good design — it's an expensive mockup.",
+    principle2H: "System before screen",
+    principle2P: "I'd rather solve the component that repeats a hundred times than the one beautiful unique screen. That's where consistency — and team speed — is actually won.",
+    principle3H: "Close to whoever decides",
+    principle3P: "Fast prototyping only matters if the right decision happens with the right person in the room. I build that access deliberately, not as a matter of project luck.",
+    principle4H: "Curation is leadership",
+    principle4P: "Keeping a design system alive is quiet leadership work: saying no to exceptions, so that the right exception, when it comes, still makes sense.",
+    tl1H: "MBA USP/Esalq — Digital Business &amp; AI Management", tl1P: "In progress",
+    tl2H: "Sicoob Confederação — Senior Product Designer", tl2P: "Acquiring, Payment Systems and Terminal Logistics",
+    tl3H: "4BIO Medicamentos Especiais (Grupo Raia Drogasil) — Mid-level Product Designer", tl3P: "Branding and new digital business expansion",
+    tl4H: "Neurona Marcas Inteligentes — Jr. Designer", tl4P: "São Paulo and region",
+    tl5H: "IMT Mauá — BA in Design", tl5P: "Instituto Mauá de Tecnologia",
+    footerHeading: "A selection of the work I've been doing in payments, terminals and design systems.",
+    footerResume: "download résumé (pdf)",
+    footerCopyright: "© 2026 Mateus Cherem", footerLocation: "São Paulo, Brazil",
+    a11ySkipLink: "Skip to main content",
+    a11yContrastOn: "Turn on high contrast", a11yContrastOff: "Turn off high contrast",
+    a11yNarrateStart: "Listen to the page content", a11yNarrateStop: "Stop narration",
+    a11yNarrateUnsupported: "Your browser doesn't support voice narration.",
+    navMentorias: "mentoring",
+    sectionTagMentorias: "mentoring",
+    mentoriasHeading: "Short e-books about the craft",
+    mentoriasNote: "Step by step from what I learned in practice, from basics to advanced. Read on screen or listen to it.",
+    trackExperience: "Professional experience", trackEducation: "Education",
+    tl6H: "Ohio University — Strategic Marketing Management", tl6P: "International certificate",
+    tl7H: "Ohio University — Business English", tl7P: "International certificate",
+    levelBasic: "Beginner", levelIntermediate: "Intermediate", levelAdvanced: "Advanced",
+    bookChapters: "chapters", bookMinutes: "min read",
+    readerClose: "Close the reader", readerToc: "Chapters",
+    readerPrev: "Previous", readerNext: "Next",
+    readerPrevAria: "Previous chapter", readerNextAria: "Next chapter",
+    readerAudioPlay: "Listen", readerAudioPause: "Pause", readerAudioResume: "Resume", readerAudioStop: "Stop the audio",
+    readerProgress: "Chapter {c} of {t}",
+    readerLangNote: "The e-books are available in Portuguese only. The audio is narrated in Portuguese as well.",
+    annBookOpen: "Reader opened:", annChapter: "Chapter:",
+    annAudioStart: "Audiobook started.", annAudioStop: "Audiobook stopped.", annBookEnd: "End of the e-book.",
+    notFoundHeading: "This page does not exist.",
+    notFoundText: "The address may have changed. Case studies, about and mentoring are still in the menu above.",
+    notFoundCta: "Back to the start",
+    a11yLangGroup: "Language selector", a11yMainNav: "Main navigation", a11yHero: "Introduction",
+    a11yToolbar: "Accessibility tools",
+    a11yTextSizeOn: "Increase text size", a11yTextSizeOff: "Reset text to normal size",
+    a11yNarratePause: "Pause narration", a11yNarrateResume: "Resume narration",
+    a11yMenuOpen: "Open navigation menu", a11yMenuClose: "Close navigation menu",
+    copyLabel: "copy", copyDone: "copied",
+    annContrastOn: "High contrast on.", annContrastOff: "High contrast off.",
+    annTextOn: "Text enlarged.", annTextOff: "Text back to normal size.",
+    annNarrateStart: "Narration started.", annNarrateStop: "Narration stopped.",
+    annNarratePause: "Narration paused.", annNarrateResume: "Narration resumed.",
+    annNarrateEnd: "End of narration.",
+    annCopied: "Email copied to clipboard.",
+    annCopyFail: "Copy failed. Please select the email manually.",
+    annLang: "Language changed to English.",
+    annSection: "Now reading:"
+  },
+  es: {
+    sectionTagCases: "casos",
+    casesHeading: "Proyectos que sostienen esto",
+    casesNote: "Cinco frentes que lideré en Ger7 Sistemas y tres plataformas de adquirencia en Sicoob. Usa las pestañas para navegar por cliente.",
+    labelProblem: "Problema",
+    labelAction: "Mi rol",
+    labelResult: "Resultado",
+    tabGer7: "Ger7 Sistemas",
+    tabSicoob: "Sicoob",
+    tabsLabel: "Casos por cliente",
+    tabGer7Count: "5 casos",
+    tabSicoobCount: "3 casos",
+    annTab: "Pestaña seleccionada:",
+    g1Id: "GER7 · 01",
+    g1Title: "Launcher, widgets y Ger7 Store",
+    g1Sub: "Ger7 Sistemas · Android POS · software de terminal",
+    g1Tag1: "Launcher",
+    g1Tag2: "Tienda de apps",
+    g1Tag3: "Android POS",
+    g1Problem: "La terminal llega al comercio como hardware genérico con Android puro. Sin una capa propia se comporta como una tableta: el comerciante se pierde en ajustes de sistema que no son suyos, y cada aplicación depende de un técnico con el equipo en la mano para instalarse.",
+    g1Action: "Lideré esta capa de punta a punta, con ingeniería y con el equipo de campo. Una decisión simple orientó cada pantalla: tratar el aparato como producto y no como un Android con aplicaciones sueltas encima.",
+    g1Li1: "Inicio con widgets de reloj, clima y pronóstico, sobre un fondo propio",
+    g1Li2: "Centro de control y ajustes del aparato en el vocabulario del comerciante",
+    g1Li3: "Modo técnico tras autenticación, separando a quien instala de quien vende",
+    g1Li4: "Ger7 Store con catálogo, búsqueda, ficha de aplicación y actualización en la propia terminal",
+    g1Result: "La terminal ganó un camino único y previsible: pago, aplicaciones y ajustes en el mismo lugar. Publicar o actualizar una aplicación dejó de exigir desplazamiento hasta el cliente, y la base de componentes creada aquí se volvió el punto de partida de los demás frentes.",
+    g1Caption: "Nueve pantallas del launcher y de la Ger7 Store. Haz clic para recorrer la galería.",
+    g2Id: "GER7 · 02",
+    g2Title: "POS7 — el frente de pago de la terminal",
+    g2Sub: "Ger7 Sistemas · SmartPOS · flujo de venta",
+    g2Tag1: "Frente de pago",
+    g2Tag2: "SmartPOS",
+    g2Tag3: "Flujo de venta",
+    g2Problem: "La pantalla de venta es donde el operador pasa el día entero y donde cualquier duda se vuelve fila. Tiene que caber en un aparato de mano, funcionar con poca luz y una mano ocupada, y no exigir entrenamiento formal de quien entra a la caja mañana.",
+    g2Action: "Diseñé el inicio de venta para responder tres preguntas antes de cualquier toque: qué acepta este aparato, cuál es la acción principal y dónde están las operaciones del día. Las tarjetas aceptadas quedan visibles de entrada, pago y menú ocupan el área de mayor alcance del pulgar, y Pix, reimpresión y posventa entran en una franja secundaria que no compite con la venta.",
+    g2Result: "Un camino corto hasta la venta, con las operaciones de soporte cerca pero nunca en medio. La misma estructura sostiene el aparato de mano y el de mostrador, sin rediseñar la pantalla para cada formato.",
+    g2Caption: "Inicio del POS7 en la terminal Sunmi P2.",
+    g3Id: "GER7 · 03",
+    g3Title: "Tap2Pay — el móvil pasa a ser la terminal",
+    g3Sub: "Ger7 Sistemas · pago sin contacto sin terminal",
+    g3Tag1: "NFC",
+    g3Tag2: "Onboarding",
+    g3Tag3: "Provisión del equipo",
+    g3Problem: "Aceptar tarjeta sin terminal le pide al comercio un gesto que nunca hizo: acercar la tarjeta del cliente a su propio teléfono. Y como la antena NFC está atrás, el intento natural — acercarla al frente de la pantalla — es el que falla. Antes de eso está la etapa que a nadie le gusta: identificar el equipo y vincularlo a la cuenta.",
+    g3Action: "Traté la instrucción como parte del flujo, no como texto de ayuda en otro lugar. El gesto correcto vive en la pantalla donde ocurre, con ilustración de ambas manos en posición, énfasis tipográfico en “la parte de atrás del móvil” e indicador visible de cuántas etapas faltan. El onboarding y el vínculo del equipo siguen el mismo patrón: una decisión por pantalla, siempre con salida visible.",
+    g3Result: "La duda se responde donde nace. Es una corrección barata en el diseño y cara de descubrir después, cuando ya se volvió ticket de soporte.",
+    g3Caption: "Etapa de aproximación del Tap2Pay.",
+    g4Id: "GER7 · 04",
+    g4Title: "Autoservicio en el tótem",
+    g4Sub: "Ger7 Sistemas · Mobbuy · tótem Gertec SK210",
+    g4Tag1: "Autoservicio",
+    g4Tag2: "Quiosco",
+    g4Tag3: "Pantalla en reposo",
+    g4Problem: "El tótem queda solo en un pasillo y nadie explica qué hace. Si la pantalla quieta no convence en pocos segundos la persona pasa de largo — y quien se detiene no tiene a nadie al lado.",
+    g4Action: "Lideré el recorrido desde una inversión simple: el estado que más aparece en el día no es ninguna pantalla de flujo, es la pantalla quieta. Empecé por ella y diseñé el resto hacia afuera, con carrusel de mensajes, ilustración propia por servicio y áreas táctiles dimensionadas para uso de pie.",
+    g4Result: "La pantalla quieta se volvió vitrina. En vez de un botón solo sobre blanco, el tótem muestra en rotación lo que resuelve — impuesto, boleto y recarga — y solo después invita a empezar.",
+    g4Caption: "La pantalla en reposo en movimiento. El carrusel gira de verdad: tres llamadas alternando.",
+    g5Id: "GER7 · 05",
+    g5Title: "Ger7 Design System",
+    g5Sub: "Ger7 Sistemas · tokens, componentes e iconos",
+    g5Tag1: "Design Tokens",
+    g5Tag2: "Componentes",
+    g5Tag3: "Accesibilidad",
+    g5Problem: "Launcher, tienda y frente de pago eran construidos por frentes distintos y a ritmos distintos. Sin base común, el mismo botón nacía con tres alturas, el naranja de marca aparecía en cuatro tonos y cada pantalla resolvía el espaciado a ojo.",
+    g5Action: "Propuse y conduje el sistema a partir de lo que ya corría en producción, en vez de empezar de una hoja en blanco. Muestreé las pantallas existentes, medí los contrastes reales y le devolví al equipo una base ya decidida.",
+    g5Li1: "Escala neutra de ocho pasos y color de marca en cuatro estados, con contraste medido",
+    g5Li2: "Escala tipográfica corta para que el equipo la memorice, con piso de 15px en el cuerpo",
+    g5Li3: "Componentes documentados con todos los estados — incluidos foco, error y vacío",
+    g5Li4: "Camino acordado para el caso excepcional, con plazo de respuesta conocido",
+    g5Result: "La base pasó a decidir antes que la pantalla. El naranja se volvió señal de acción y nada más, el área táctil se volvió regla de 48px en vez de debate por sprint, y un producto nuevo empieza desde la biblioteca.",
+    g5Caption: "Cuatro paneles del sistema. Los colores se muestrearon de las pantallas en producción — el naranja #ED7B22 tiene 7,4:1 sobre negro.",
+    s1Id: "SICOOB · 01",
+    s1Title: "Sipag — el frente de captura en la terminal",
+    s1Sub: "Sicoob Confederação · SmartPOS",
+    s1Tag1: "Frente de captura",
+    s1Tag2: "Terminal",
+    s1Tag3: "Posventa",
+    s1Problem: "La cooperativa entrega la terminal a comercios de perfiles muy distintos, de la panadería al consultorio, sin capacitación presencial. La pantalla inicial tiene que ser autoexplicativa para quien nunca operó una terminal y rápida para quien la opera todo el día.",
+    s1Action: "Diseñé el inicio de captura en torno a una sola pregunta: cuál es el importe de la venta. El teclado ocupa el centro, las tarjetas aceptadas por la institución aparecen sin tener que buscarlas, y posventa y menú quedan en la base — al alcance del pulgar pero fuera del camino de la venta.",
+    s1Result: "Una pantalla que enseña mientras se usa. Quien opera por primera vez cierra una venta sin instrucción externa, y quien opera a diario llega al importe en un toque.",
+    s1Caption: "Pantalla inicial del Sipag en la terminal.",
+    s2Id: "SICOOB · 02",
+    s2Title: "Gestión de Logística de Terminales",
+    s2Sub: "Sicoob Confederação · Sisbr · plataforma interna",
+    s2Tag1: "Plataforma B2B",
+    s2Tag2: "Stock",
+    s2Tag3: "Flujo de aprobación",
+    s2Problem: "La red de cooperativas necesitaba planificar, distribuir y aprobar terminales de pago. El proceso vivía fragmentado entre hojas de cálculo, aprobaciones acordadas fuera del sistema y equipos que nunca veían el mismo número de stock.",
+    s2Action: "Lideré el diseño de punta a punta, conduciendo la investigación con quienes operan el proceso y alineando cada decisión con PMs, ingeniería y las áreas de negocio.",
+    s2Li1: "Planificación de consumo y stock por cooperativa y punto de atención",
+    s2Li2: "Flujo de aprobación entre equipos, rastreable desde la solicitud hasta la firma final",
+    s2Li3: "Indicadores de pendiente, en tránsito y disponible en una sola lectura",
+    s2Li4: "Configuración de parámetros y órdenes de servicio en el mismo módulo",
+    s2Result: "Un flujo único, probado con los usuarios operativos, que sustituye pasos manuales por decisiones guiadas dentro del producto. La aprobación dejó de acordarse fuera del sistema y pasó a dejar registro.",
+    s2Caption: "Panel de Control de la planificación, en Sisbr.",
+    s3Id: "SICOOB · 03",
+    s3Title: "Gestión de Ciclo de Vida del establecimiento",
+    s3Sub: "Sicoob Confederação · Sisbr · plataforma interna",
+    s3Tag1: "Plataforma B2B",
+    s3Tag2: "Inactividad",
+    s3Tag3: "Retención",
+    s3Problem: "Un establecimiento que deja de transaccionar rara vez avisa. Cuando la pérdida aparece en el cierre del mes ya no hay nada que hacer — y la información existía, dispersa entre informes que nadie abría cada semana.",
+    s3Action: "Diseñé el panel en torno al tiempo, no al volumen: las franjas de inactividad por número de días organizan la lista antes de cualquier filtro, para que el equipo vea primero a quién todavía se puede recuperar.",
+    s3Result: "La inactividad empezó a aparecer mientras aún hay plazo de reacción, en vez de volverse número en el cierre. La misma pantalla sirve para diagnóstico y para acción, sin exportar nada.",
+    s3Caption: "Panel de Inactividad del Ciclo de Vida, en Sisbr.",
+    sgWidgets: "Widgets",
+    sgControles: "Centro de control",
+    sgTecnico: "Acceso técnico",
+    sgConfig: "Ajustes",
+    sgStoreHome: "Store · inicio",
+    sgBusca: "Búsqueda",
+    sgApp: "Ficha de la app",
+    sgMenu: "Menú",
+    sgSobre: "Acerca de",
+    sgPos7: "POS7 · pantalla",
+    sgPos7P2: "POS7 · Sunmi P2",
+    sgTap: "Aproximación",
+    sgOcioso: "Pantalla en reposo · animada",
+    sgTotem: "Tótem SK210",
+    sgDsCor: "Color",
+    sgDsTipo: "Tipografía",
+    sgDsComp: "Componentes",
+    sgDsIcon: "Iconos",
+    sgSipag: "Sipag",
+    sgLogistica: "Logística · panel",
+    sgCiclo: "Ciclo de vida · inactividad",
+    sgWidgetsAlt: "Inicio del launcher Ger7 con widgets de reloj, clima, humedad y pronóstico del día sobre el fondo de la terminal.",
+    sgControlesAlt: "Centro de control del launcher Ger7: Wi-Fi, Bluetooth, tiempo de pantalla, brillo y volumen en acceso rápido.",
+    sgTecnicoAlt: "Modal de autenticación técnica sobre el centro de control, separando el acceso del técnico del acceso del comerciante.",
+    sgConfigAlt: "Lista de ajustes del aparato en el launcher Ger7: red, datos, VPN, launcher por defecto, barra de estado, pantalla e impresora.",
+    sgStoreHomeAlt: "Inicio de la Ger7 Store con el catálogo de aplicaciones de la terminal y los estados instalar, actualizar y desinstalar.",
+    sgBuscaAlt: "Búsqueda de aplicaciones en la Ger7 Store, con el teclado de la terminal y el estado vacío invitando a escribir.",
+    sgAppAlt: "Ficha de aplicación en la Ger7 Store: versión, tamaño, fecha de actualización, vista previa y descripción.",
+    sgMenuAlt: "Menú de la Ger7 Store con modo oscuro, selección de idioma y acceso a acerca de y preguntas frecuentes.",
+    sgSobreAlt: "Pantalla Acerca de de la Ger7 Store, con información de la aplicación, canales de soporte y el acceso del técnico.",
+    sgPos7Alt: "Pantalla de inicio del POS7: tarjetas aceptadas, accesos de pago y menú, con Pix, reimpresión y ajustes en la franja inferior.",
+    sgPos7P2Alt: "Terminal Sunmi P2 de Ger7 con la pantalla inicial del POS7: impresora térmica naranja arriba, área de aproximación y accesos a pago, menú, Pix, reimpresión y posventa.",
+    sgTapAlt: "Pantalla Tap on Phone: ilustración de una mano acercando la tarjeta a la parte trasera de otro teléfono, con la instrucción destacada e indicador de etapas.",
+    sgOciosoAlt: "Pantalla en reposo del tótem en movimiento: tres llamadas de servicio alternan en carrusel — impuesto vehicular, pago de boletos y recarga de créditos — sobre el botón Empezar.",
+    sgTotemAlt: "Tótem de autoservicio Gertec SK210 con la pantalla inicial de Mobbuy, impresora en la base y lector de aproximación.",
+    sgDsCorAlt: "Panel de color del Ger7 Design System: escala neutra de ocho pasos, cuatro estados del naranja de marca y una tabla de contraste verificado.",
+    sgDsTipoAlt: "Panel de tipografía del Ger7 Design System: seis niveles de la escala, del display al micro, con objetivos de lectura y de toque.",
+    sgDsCompAlt: "Panel de componentes del Ger7 Design System: estados de botón, fila de lista, chip de filtro, campo de búsqueda, interruptor y escala de espaciado base 4.",
+    sgDsIconAlt: "Panel de iconos del Ger7 Design System: ocho iconos dibujados en rejilla de 24 píxeles con trazo de 2 píxeles.",
+    sgSipagAlt: "Pantalla de inicio del Sipag: campo de importe de la venta, tarjetas aceptadas por la institución y acceso a posventa y menú.",
+    sgLogisticaAlt: "Panel de Control de la Gestión de Logística en Sisbr: filtros por central y cooperativa, indicadores de stock y tabla por punto de atención.",
+    sgCicloAlt: "Panel de Inactividad de la Gestión de Ciclo de Vida en Sisbr: franjas de inactividad por período y lista de establecimientos sin transaccionar.",
+    devTapAlt: "Móvil mostrando la pantalla de aproximación del Tap on Phone.",
+    devSisbrAlt: "Plataforma interna del Sisbr abierta en el navegador, con el Panel de Control de la Gestión de Logística.",
+    devDsAlt: "Tarjeta resumen del Ger7 Design System: paleta, escala tipográfica, un componente y la escala de espaciado.",
+    deviceP2: "Terminal Sunmi P2",
+    deviceTap: "Móvil como lector",
+    deviceTotem: "Tótem Gertec SK210",
+    deviceDs: "Tarjeta del sistema",
+    deviceSisbr: "Plataforma en el navegador",
+    lightboxLabel: "Galería de pantallas del proyecto",
+    lightboxOpen: "Abrir la imagen original en una pestaña nueva",
+    lightboxClose: "Cerrar la galería",
+    lightboxPrev: "Pantalla anterior",
+    lightboxNext: "Pantalla siguiente",
+    lightboxOf: "Pantalla {c} de {t}.",
+    highlightsNote: "Donde mi trabajo cambia el resultado del producto, no solo la pantalla.",
+    h1Title: "Del problema al componente en producción",
+    h1Text: "Conduzco investigación, mapeo y recorridos hasta prototipos navegables de alta fidelidad — y sigo con el equipo hasta la implementación, porque una decisión de diseño que no sobrevive a la entrega no resolvió nada.",
+    h2Title: "Bases que deciden antes que la pantalla",
+    h2Text: "Estructuro design systems a partir de lo que ya corre en producción, con contraste medido y estados documentados. El objetivo no es estandarizar por estandarizar: es quitar del camino de cada squad las decisiones que ya fueron tomadas.",
+    h3Title: "Cerca de quien decide el roadmap",
+    h3Text: "Trabajo junto a POs, PMs e ingeniería para equilibrar viabilidad, estrategia y experiencia — y llevo la discusión al problema antes de que se vuelva discusión de pantalla.",
+    a11yThemeSwitch: "Tema claro u oscuro",
+    a11yThemeLight: "Activar modo claro",
+    a11yThemeDark: "Activar modo oscuro",
+    annThemeLight: "Modo claro activado.",
+    annThemeDark: "Modo oscuro activado.",
+    wordmark: "Mateus Cherem — Senior Product Designer",
+    navImpact: "impacto", navCases: "casos", navAbout: "sobre mí", navContact: "contacto",
+    heroH1: 'Diseño que tiene que <span class="accent">funcionar en producción</span>, no solo en la presentación.',
+    heroLede: "31 años, São Paulo. Hace más de 6 años diseño sistemas de pago y logística de terminales — del wireframe al componente en producción, siempre cerca de quien decide el roadmap.",
+    ctaPrimary: "Hablemos", ctaSecondary: "Ver los casos →",
+    terminalLabel: "sesión · perfil.log",
+    tLine0: "&gt; cargando perfil...",
+    tLine5: 'actual   <span class="hl">Sicoob</span> — Sist. de Pagos',
+    tLine6: "desde   nov/2024 (4a5m en el registro)",
+    tLine9: "formación  MBA USP/Esalq — Gestión &",
+    tLine10: "           IA · Diseño, IMT Mauá",
+    tLine12: 'foco    <span class="hl">design systems</span>, productos',
+    tLine13: "        multiplataforma, liderazgo",
+    tLine14: "        de equipos de diseño",
+    tLine17: 'fin del registro <span class="cursor"></span>',
+    sectionTagImpact: "impacto",
+    highlightsHeading: "Lo que aporto a un equipo desde el primer día",
+    h1Tag: "de punta a punta",
+    h2Tag: "design systems",
+    h3Tag: "negocio",
+    sectionTagAbout: "sobre mí", aboutHeading: "Cómo pienso el diseño, los equipos y el producto",
+    aboutP1: "Empecé en branding, en <strong>Neurona Marcas Inteligentes</strong>, entendiendo cómo una marca se traduce en experiencia antes incluso de convertirse en interfaz. Eso todavía moldea cómo pienso el producto hoy: toda decisión de UI carga un posicionamiento detrás, aunque nadie lo esté mirando directamente.",
+    aboutP2: "Pasé por <strong>4BIO Medicamentos Especiais</strong>, dentro del Grupo Raia Drogasil, ayudando a expandir nuevos negocios digitales junto a equipos de tecnología. Hoy, en <strong>Sicoob</strong>, lidero proyectos de punta a punta en Sistemas de Pago y Ecosistemas Digitales — de la investigación al prototipo validado, siempre en contacto directo con PMs y POs.",
+    aboutP3: "Estoy cursando el <strong>MBA USP/Esalq en Gestión de Negocios Digitales e Inteligencia Artificial</strong>, porque creo que el próximo salto de seniority en diseño no viene solo de una UI más refinada — viene de entender mejor el negocio y las herramientas que están cambiando cómo se construyen los productos.",
+    principle1H: "El diseño es una decisión de negocio, no solo de pantalla",
+    principle1P: "Una interfaz bonita que no resuelve la aprobación correcta, o que no encaja en la estrategia de marca, no es buen diseño — es un mockup caro.",
+    principle2H: "Sistema antes que pantalla",
+    principle2P: "Prefiero resolver el componente que se repite cien veces antes que la pantalla única y bonita. Ahí es donde realmente se gana consistencia — y velocidad de equipo.",
+    principle3H: "Cerca de quien decide",
+    principle3P: "Prototipar rápido solo importa si la decisión correcta ocurre con la persona correcta en la sala. Cultivo ese acceso de forma deliberada, no como suerte de proyecto.",
+    principle4H: "Curar es liderar",
+    principle4P: "Mantener vivo un design system es un trabajo de liderazgo silencioso: decir que no a las excepciones, para que la excepción correcta, cuando llegue, todavía tenga sentido.",
+    tl1H: "MBA USP/Esalq — Gestión de Negocios Digitales e IA", tl1P: "En curso",
+    tl2H: "Sicoob Confederação — Senior Product Designer", tl2P: "Adquirencia, Sistemas de Pago y Logística de Terminales",
+    tl3H: "4BIO Medicamentos Especiais (Grupo Raia Drogasil) — Product Designer Semisenior", tl3P: "Branding y expansión de nuevos negocios digitales",
+    tl4H: "Neurona Marcas Inteligentes — Diseñador Jr.", tl4P: "São Paulo y alrededores",
+    tl5H: "IMT Mauá — Licenciatura en Diseño", tl5P: "Instituto Mauá de Tecnologia",
+    footerHeading: "Una selección del trabajo que vengo haciendo en pagos, terminales y design systems.",
+    footerResume: "descargar CV (pdf)",
+    footerCopyright: "© 2026 Mateus Cherem", footerLocation: "São Paulo, Brasil",
+    a11ySkipLink: "Saltar al contenido principal",
+    a11yContrastOn: "Activar alto contraste", a11yContrastOff: "Desactivar alto contraste",
+    a11yNarrateStart: "Escuchar el contenido de la página", a11yNarrateStop: "Detener narración",
+    a11yNarrateUnsupported: "Tu navegador no admite narración por voz.",
+    navMentorias: "mentorías",
+    sectionTagMentorias: "mentorías",
+    mentoriasHeading: "E-books cortos sobre el oficio",
+    mentoriasNote: "Paso a paso de lo que aprendí en la práctica, de lo básico a lo avanzado. Lee en pantalla o escúchalo.",
+    trackExperience: "Experiencia profesional", trackEducation: "Formación",
+    tl6H: "Ohio University — Strategic Marketing Management", tl6P: "Certificación internacional",
+    tl7H: "Ohio University — Business English", tl7P: "Certificación internacional",
+    levelBasic: "Básico", levelIntermediate: "Intermedio", levelAdvanced: "Avanzado",
+    bookChapters: "capítulos", bookMinutes: "min de lectura",
+    readerClose: "Cerrar el lector", readerToc: "Capítulos",
+    readerPrev: "Anterior", readerNext: "Siguiente",
+    readerPrevAria: "Capítulo anterior", readerNextAria: "Capítulo siguiente",
+    readerAudioPlay: "Escuchar", readerAudioPause: "Pausar", readerAudioResume: "Reanudar", readerAudioStop: "Detener el audio",
+    readerProgress: "Capítulo {c} de {t}",
+    readerLangNote: "Los e-books están disponibles solo en portugués. El audio también se narra en portugués.",
+    annBookOpen: "Lector abierto:", annChapter: "Capítulo:",
+    annAudioStart: "Audiolibro iniciado.", annAudioStop: "Audiolibro detenido.", annBookEnd: "Fin del e-book.",
+    notFoundHeading: "Esta página no existe.",
+    notFoundText: "La dirección puede haber cambiado. Los casos, sobre mí y las mentorías siguen en el menú de arriba.",
+    notFoundCta: "Volver al inicio",
+    a11yLangGroup: "Selector de idioma", a11yMainNav: "Navegación principal", a11yHero: "Introducción",
+    a11yToolbar: "Herramientas de accesibilidad",
+    a11yTextSizeOn: "Aumentar el tamaño del texto", a11yTextSizeOff: "Volver al tamaño normal del texto",
+    a11yNarratePause: "Pausar narración", a11yNarrateResume: "Reanudar narración",
+    a11yMenuOpen: "Abrir menú de navegación", a11yMenuClose: "Cerrar menú de navegación",
+    copyLabel: "copiar", copyDone: "copiado",
+    annContrastOn: "Alto contraste activado.", annContrastOff: "Alto contraste desactivado.",
+    annTextOn: "Texto ampliado.", annTextOff: "Texto en tamaño normal.",
+    annNarrateStart: "Narración iniciada.", annNarrateStop: "Narración detenida.",
+    annNarratePause: "Narración pausada.", annNarrateResume: "Narración reanudada.",
+    annNarrateEnd: "Fin de la narración.",
+    annCopied: "Correo copiado al portapapeles.",
+    annCopyFail: "No se pudo copiar. Selecciona el correo manualmente.",
+    annLang: "Idioma cambiado a Español.",
+    annSection: "Leyendo:"
+  }
+};
+/* ============ APP STATE ============ */
+const STORAGE_KEY   = "mc_portfolio_lang";
+const CONTRAST_KEY  = "mc_portfolio_contrast";
+const TEXTSIZE_KEY  = "mc_portfolio_textsize";
+const THEME_KEY     = "mc_portfolio_theme";
+const supportedLangs = ["pt","en","es"];
+const langNames = { pt: "Português", en: "English", es: "Español" };
+const speechLangCodes = { pt: "pt-BR", en: "en-US", es: "es-ES" };
+let currentLang = "pt";
+let highContrastOn = false;
+let largeTextOn = false;
+let lightModeOn = false;
+const $ = (sel) => document.querySelector(sel);
+const dict = () => translations[currentLang];
+/* ============ LIVE REGION ============
+   Toggles are useless to a screen-reader user if nothing confirms
+   they fired. Every state change routes through here. */
+const liveRegion = $("#a11y-status");
+let liveTimer = null;
+function announce(message){
+  if(!liveRegion) return;
+  clearTimeout(liveTimer);
+  liveRegion.textContent = "";
+  // a beat of empty content forces re-announcement of repeated strings
+  liveTimer = setTimeout(() => { liveRegion.textContent = message; }, 60);
+}
+/* ============ LANGUAGE ENGINE ============ */
+function applyLanguage(lang, opts = {}){
+  if(!supportedLangs.includes(lang)) lang = "pt";
+  const changed = lang !== currentLang;
+  currentLang = lang;
+  const d = dict();
+  document.querySelectorAll("[data-i18n]").forEach(el => {
+    const key = el.getAttribute("data-i18n");
+    if(d[key] === undefined) return;
+    // innerHTML on an SVG node parses as SVG markup — use text there instead.
+    if(el.namespaceURI === "http://www.w3.org/2000/svg") el.textContent = d[key];
+    else el.innerHTML = d[key];
+  });
+  document.querySelectorAll("[data-i18n-aria]").forEach(el => {
+    const key = el.getAttribute("data-i18n-aria");
+    if(d[key] !== undefined) el.setAttribute("aria-label", d[key]);
+  });
+  document.querySelectorAll("[data-i18n-alt]").forEach(el => {
+    const key = el.getAttribute("data-i18n-alt");
+    if(d[key] !== undefined) el.setAttribute("alt", d[key]);
+  });
+  document.querySelectorAll(".lang-btn").forEach(btn => {
+    const btnLang = btn.getAttribute("data-lang");
+    const isActive = btnLang === lang;
+    btn.classList.toggle("active", isActive);
+    btn.setAttribute("aria-pressed", isActive ? "true" : "false");
+    btn.setAttribute("tabindex", isActive ? "0" : "-1");
+    btn.setAttribute("aria-label", isActive
+      ? `${langNames[btnLang]} (${d.a11yLangGroup})`
+      : (btnLang === "pt" ? "Mudar para Português"
+        : btnLang === "en" ? "Switch to English"
+        : "Cambiar a Español"));
+  });
+  const set = (sel, attr, val) => { const el = $(sel); if(el) el.setAttribute(attr, val); };
+  set(".status-nav", "aria-label", d.a11yMainNav);
+  set(".mobile-nav", "aria-label", d.a11yMainNav);
+  set(".lang-switch", "aria-label", d.a11yLangGroup);
+  set(".hero", "aria-label", d.a11yHero);
+  set("#a11y-toolbar", "aria-label", d.a11yToolbar);
+  document.querySelectorAll(".copy-btn").forEach(btn => {
+    if(!btn.classList.contains("done")) btn.textContent = d.copyLabel;
+  });
+  syncContrastButton();
+  syncThemeButton();
+  syncTextSizeButton();
+  syncNarrateButtons();
+  syncMenuButton();
+  renderLibrary();
+  if(reader.book){
+    readerEls.level.textContent = d[reader.book.levelKey];
+    renderChapter(reader.chapter, { silent: true });
+    syncBookAudioButtons();
+  }
+  document.documentElement.lang = lang === "pt" ? "pt-BR" : (lang === "en" ? "en-US" : "es-ES");
+  localStorage.setItem(STORAGE_KEY, lang);
+  restartTerminalTypewriter();
+  // A voice mid-sentence in the old language would be nonsense — reset it.
+  if(narration.state !== "idle") stopNarration({ silent: true });
+  if(changed && !opts.silent) announce(d.annLang);
+}
+document.querySelectorAll(".lang-btn").forEach(btn => {
+  btn.addEventListener("click", () => applyLanguage(btn.getAttribute("data-lang")));
+});
+/* Roving arrow-key navigation inside the language group (WAI-ARIA toolbar pattern) */
+const langButtons = Array.from(document.querySelectorAll(".lang-btn"));
+langButtons.forEach((btn, idx) => {
+  btn.addEventListener("keydown", (e) => {
+    let next = null;
+    if(e.key === "ArrowRight" || e.key === "ArrowDown") next = (idx + 1) % langButtons.length;
+    else if(e.key === "ArrowLeft" || e.key === "ArrowUp") next = (idx - 1 + langButtons.length) % langButtons.length;
+    else if(e.key === "Home") next = 0;
+    else if(e.key === "End") next = langButtons.length - 1;
+    if(next === null) return;
+    e.preventDefault();
+    langButtons[next].focus();
+  });
+});
+/* ============ HIGH CONTRAST MODE ============ */
+function syncContrastButton(){
+  const btn = $("#contrast-btn");
+  if(!btn) return;
+  const label = highContrastOn ? dict().a11yContrastOff : dict().a11yContrastOn;
+  btn.setAttribute("aria-label", label);
+  btn.setAttribute("title", label);
+  btn.setAttribute("aria-pressed", highContrastOn ? "true" : "false");
+}
+function setHighContrast(on, opts = {}){
+  highContrastOn = on;
+  document.documentElement.classList.toggle("high-contrast", on);
+  document.documentElement.classList.add("contrast-user-set");
+  localStorage.setItem(CONTRAST_KEY, on ? "1" : "0");
+  syncContrastButton();
+  if(!opts.silent) announce(on ? dict().annContrastOn : dict().annContrastOff);
+}
+$("#contrast-btn").addEventListener("click", () => setHighContrast(!highContrastOn));
+
+/* ============ TEMA CLARO / ESCURO ============
+   O alto contraste continua acima dos dois: se estiver ligado, ele manda
+   na paleta independentemente do tema escolhido aqui. */
+function syncThemeButton(){
+  const sw = $("#theme-switch");
+  if(!sw) return;
+  // role="switch" comunica um estado ligado/desligado, não um botão que dispara
+  // uma ação — o rótulo descreve o que o controle é, e aria-checked diz onde está.
+  sw.setAttribute("aria-checked", lightModeOn ? "true" : "false");
+  sw.setAttribute("aria-label", dict().a11yThemeSwitch);
+  sw.setAttribute("title", lightModeOn ? dict().a11yThemeDark : dict().a11yThemeLight);
+}
+
+function setLightMode(on, opts = {}){
+  lightModeOn = on;
+  document.documentElement.classList.toggle("light", on);
+  document.documentElement.classList.add("theme-user-set");
+  document.documentElement.style.colorScheme = on ? "light" : "dark";
+  localStorage.setItem(THEME_KEY, on ? "light" : "dark");
+  syncThemeButton();
+  if(!opts.silent) announce(on ? dict().annThemeLight : dict().annThemeDark);
+}
+
+const themeSwitch = $("#theme-switch");
+if(themeSwitch) themeSwitch.addEventListener("click", () => setLightMode(!lightModeOn));
+
+// Quem nunca escolheu acompanha a preferência do sistema, inclusive se ela mudar.
+const prefersLight = window.matchMedia("(prefers-color-scheme: light)");
+if(prefersLight.addEventListener){
+  prefersLight.addEventListener("change", (e) => {
+    if(document.documentElement.classList.contains("theme-user-set")) return;
+    lightModeOn = e.matches;
+    document.documentElement.classList.toggle("light", e.matches);
+    syncThemeButton();
+  });
+}
+/* ============ TEXT SIZE ============ */
+function syncTextSizeButton(){
+  const btn = $("#textsize-btn");
+  if(!btn) return;
+  const label = largeTextOn ? dict().a11yTextSizeOff : dict().a11yTextSizeOn;
+  btn.setAttribute("aria-label", label);
+  btn.setAttribute("title", label);
+  btn.setAttribute("aria-pressed", largeTextOn ? "true" : "false");
+  const glyph = btn.querySelector(".glyph");
+  if(glyph) glyph.textContent = largeTextOn ? "A-" : "A+";
+}
+function setLargeText(on, opts = {}){
+  largeTextOn = on;
+  document.documentElement.style.setProperty("--font-scale", on ? "1.25" : "1");
+  localStorage.setItem(TEXTSIZE_KEY, on ? "1" : "0");
+  syncTextSizeButton();
+  if(!opts.silent) announce(on ? dict().annTextOn : dict().annTextOff);
+}
+$("#textsize-btn").addEventListener("click", () => setLargeText(!largeTextOn));
+/* ============ NARRATION (TEXT-TO-SPEECH) ============
+   Read section by section in short utterances. One long utterance
+   is cut off by Chrome after roughly 15 seconds, and it gives the
+   listener no way to tell where they are on the page. */
+const narration = {
+  state: "idle",      // idle | playing | paused
+  queue: [],          // [{ el, text }]
+  index: 0,
+  utterance: null,
+  keepAlive: null
+};
+const supportsSpeech = "speechSynthesis" in window && "SpeechSynthesisUtterance" in window;
+/* O que está escrito para o olho não está escrito para o ouvido.
+   Travessão, separador visual e e-mail entregues crus ao sintetizador
+   viram ruído ou pausa no lugar errado. */
+const speechWords = {
+  pt: { at: " arroba ", dot: " ponto ", by: " por " },
+  en: { at: " at ",     dot: " dot ",   by: " by "  },
+  es: { at: " arroba ", dot: " punto ", by: " por " }
+};
+
+function speechText(raw){
+  const w = speechWords[currentLang] || speechWords.pt;
+  return raw
+    .replace(/([\w.\-]+)@([\w\-]+)\.([\w.\-]+)/g,
+             (m, u, d, t) => u.replace(/\./g, w.dot) + w.at + d + w.dot + t.replace(/\./g, w.dot))
+    .replace(/(\d)\s*[×x]\s*(\d)/g, "$1" + w.by + "$2")
+    .replace(/\s*[→⟶]\s*/g, ", ")
+    .replace(/\s*[—–]\s*/g, ", ")
+    .replace(/\s+[·•|]\s+/g, ", ")
+    .replace(/\.{3,}/g, ", ")
+    .replace(/[«»“”„]/g, "")
+    .replace(/\s*\(([^)]*)\)/g, ", $1,")
+    .replace(/\s*,\s*,+/g, ", ")
+    .replace(/,\s*([.!?;:])/g, "$1")
+    .replace(/\s{2,}/g, " ")
+    .trim();
+}
+
+function chunkText(text, max = 240){
+  // Split on sentence ends, then regroup so each utterance stays short.
+  // Sentinel split instead of a lookbehind: lookbehind throws a parse-time
+  // SyntaxError on older Safari, which would take the entire script down.
+  const parts = text.replace(/([.!?:;])\s+/g, "$1\u0001").split("\u0001");
+  const chunks = [];
+  let buffer = "";
+  // Uma frase sozinha pode passar do orçamento. Cortar em qualquer espaço
+  // cria pausa no meio de um sintagma e soa truncado, então tentamos antes
+  // vírgula, ponto e vírgula e dois-pontos — pausas que a fala já faria.
+  const hardSplit = (sentence) => {
+    if(sentence.length <= max) return [sentence];
+    const clauses = sentence.replace(/([,;:])\s+/g, "$1\u0001").split("\u0001");
+    const grouped = [];
+    let line = "";
+    clauses.forEach(cl => {
+      if((line + " " + cl).trim().length > max && line){ grouped.push(line.trim()); line = cl; }
+      else line = (line + " " + cl).trim();
+    });
+    if(line.trim()) grouped.push(line.trim());
+    // Oração gigante sem pontuação nenhuma: aí sim cai para palavras.
+    return grouped.flatMap(part => {
+      if(part.length <= max) return [part];
+      const out = []; let l = "";
+      part.split(/\s+/).forEach(word => {
+        if((l + " " + word).trim().length > max && l){ out.push(l.trim()); l = word; }
+        else l = (l + " " + word).trim();
+      });
+      if(l.trim()) out.push(l.trim());
+      return out;
+    });
+  };
+  parts.forEach(part => {
+    hardSplit(part).forEach(piece => {
+      if((buffer + " " + piece).trim().length > max && buffer){
+        chunks.push(buffer.trim());
+        buffer = piece;
+      } else {
+        buffer = (buffer + " " + piece).trim();
+      }
+    });
+  });
+  if(buffer.trim()) chunks.push(buffer.trim());
+  return chunks.filter(Boolean);
+}
+function buildNarrationQueue(){
+  const blocks = document.querySelectorAll("#main-content > section, footer#contact");
+  const queue = [];
+  blocks.forEach(block => {
+    const clone = block.cloneNode(true);
+    // Terminal chrome and UI affordances are noise when spoken aloud.
+    clone.querySelectorAll(".terminal-head, .terminal-foot, .copy-btn, .sr-only, .section-tag, svg, [hidden]")
+         .forEach(node => node.remove());
+    const raw = clone.textContent
+      .replace(/[-–—_=]{3,}/g, " ")   // ASCII rules in the terminal are not words
+      .replace(/\s+/g, " ")
+      .trim();
+    if(!raw) return;
+    const heading = block.querySelector("h1, h2");
+    const label = heading ? heading.textContent.replace(/\s+/g, " ").trim() : "";
+    chunkText(raw).forEach((text, i) => {
+      queue.push({ el: block, text, label, isFirstOfBlock: i === 0 });
+    });
+  });
+  return queue;
+}
+/* Voice quality varies wildly per platform. The old code preferred
+   `voice.default`, which on Windows/Chrome resolves to a robotic legacy
+   English voice. English now goes through an explicit preference list;
+   Portuguese and Spanish keep the previous behaviour, which sounded fine. */
+const preferredVoices = {
+  // Vozes neurais soam muito mais fluidas que as legadas do sistema. Sem
+  // esta lista o navegador entrega a voz "default", que no Windows costuma
+  // ser justamente a antiga e robótica.
+  "pt-br": ["Google português do Brasil","Microsoft Francisca Online (Natural)","Microsoft Thalita Online (Natural)","Microsoft Brenda Online (Natural)","Microsoft Antonio Online (Natural)","Luciana","Joana"],
+  "en-us": ["Google US English","Microsoft Aria Online (Natural)","Microsoft Jenny Online (Natural)","Microsoft Emma Online (Natural)","Microsoft Ava","Samantha","Ava","Allison","Alex"],
+  "es-es": ["Google español","Microsoft Elvira Online (Natural)","Microsoft Alvaro Online (Natural)","Mónica","Monica","Marisol"]
+};
+function pickVoice(langCode){
+  const voices = window.speechSynthesis.getVoices();
+  if(!voices.length) return null;
+  const norm = v => v.lang.replace("_", "-").toLowerCase();
+  const target = langCode.toLowerCase();
+  const base = target.split("-")[0];
+  const exact = voices.filter(v => norm(v) === target);
+  const loose = voices.filter(v => norm(v).startsWith(base));
+  const pool = exact.length ? exact : loose;
+  if(!pool.length) return null;
+  const wanted = preferredVoices[target];
+  if(wanted){
+    for(const name of wanted){
+      const hit = pool.find(v => v.name.toLowerCase().includes(name.toLowerCase()));
+      if(hit) return hit;
+    }
+  }
+  // Nada da lista instalado: vozes neurais/remotas ainda soam melhor que
+  // as legadas embutidas, então vêm antes do fallback — agora para os três idiomas.
+  return pool.find(v => /natural|neural|google|premium|enhanced|siri/i.test(v.name))
+      || pool.find(v => !v.localService)
+      || pool.find(v => v.default)
+      || pool[0];
+}
+function highlightBlock(el){
+  document.querySelectorAll(".is-narrating").forEach(n => n.classList.remove("is-narrating"));
+  if(!el) return;
+  el.classList.add("is-narrating");
+  const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  el.scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: "start" });
+}
+function speakCurrent(){
+  if(narration.index >= narration.queue.length){ finishNarration(); return; }
+  const item = narration.queue[narration.index];
+  const utterance = new SpeechSynthesisUtterance(speechText(item.text));
+  const langCode = speechLangCodes[currentLang] || "pt-BR";
+  utterance.lang = langCode;
+  const voice = pickVoice(langCode);
+  if(voice) utterance.voice = voice;
+  utterance.rate = 1;
+  utterance.pitch = 1;
+  utterance.onend = () => {
+    if(narration.state !== "playing") return;
+    narration.index += 1;
+    speakCurrent();
+  };
+  utterance.onerror = (e) => {
+    if(e.error === "interrupted" || e.error === "canceled") return;
+    stopNarration();
+  };
+  narration.utterance = utterance;
+  if(item.isFirstOfBlock){
+    highlightBlock(item.el);
+    if(item.label) announce(`${dict().annSection} ${item.label}`);
+  }
+  window.speechSynthesis.speak(utterance);
+}
+function startNarration(){
+  if(reader.audio.state !== "idle") stopBookAudio({ silent: true });
+  narration.queue = buildNarrationQueue();
+  narration.index = 0;
+  if(!narration.queue.length) return;
+  narration.state = "playing";
+  window.speechSynthesis.cancel();
+  speakCurrent();
+  startKeepAlive();
+  syncNarrateButtons();
+  announce(dict().annNarrateStart);
+}
+function pauseNarration(){
+  window.speechSynthesis.pause();
+  narration.state = "paused";
+  syncNarrateButtons();
+  announce(dict().annNarratePause);
+}
+function resumeNarration(){
+  narration.state = "playing";
+  window.speechSynthesis.resume();
+  syncNarrateButtons();
+  announce(dict().annNarrateResume);
+}
+function stopNarration(opts = {}){
+  const wasActive = narration.state !== "idle";
+  narration.state = "idle";
+  narration.index = 0;
+  narration.queue = [];
+  stopKeepAlive();
+  if(supportsSpeech) window.speechSynthesis.cancel();
+  highlightBlock(null);
+  syncNarrateButtons();
+  if(wasActive && !opts.silent) announce(dict().annNarrateStop);
+}
+function finishNarration(){
+  narration.state = "idle";
+  narration.index = 0;
+  stopKeepAlive();
+  highlightBlock(null);
+  syncNarrateButtons();
+  announce(dict().annNarrateEnd);
+}
+/* Chrome suspends synthesis on long reads; a periodic nudge keeps it alive. */
+function startKeepAlive(){
+  stopKeepAlive();
+  narration.keepAlive = setInterval(() => {
+    if(narration.state !== "playing") return;
+    if(window.speechSynthesis.speaking && !window.speechSynthesis.paused){
+      window.speechSynthesis.pause();
+      window.speechSynthesis.resume();
+    }
+  }, 9000);
+}
+function stopKeepAlive(){
+  if(narration.keepAlive){ clearInterval(narration.keepAlive); narration.keepAlive = null; }
+}
+function syncNarrateButtons(){
+  const playBtn = $("#narrate-btn");
+  const stopBtn = $("#narrate-stop-btn");
+  if(!playBtn || !stopBtn) return;
+  const d = dict();
+  const playing = narration.state === "playing";
+  const active = narration.state !== "idle";
+  const label = playing ? d.a11yNarratePause : (active ? d.a11yNarrateResume : d.a11yNarrateStart);
+  playBtn.setAttribute("aria-label", label);
+  playBtn.setAttribute("title", label);
+  playBtn.setAttribute("aria-pressed", active ? "true" : "false");
+  playBtn.classList.toggle("speaking", playing);
+  stopBtn.hidden = !active;
+  stopBtn.setAttribute("aria-label", d.a11yNarrateStop);
+  stopBtn.setAttribute("title", d.a11yNarrateStop);
+}
+$("#narrate-btn").addEventListener("click", () => {
+  if(!supportsSpeech){ announce(dict().a11yNarrateUnsupported); alert(dict().a11yNarrateUnsupported); return; }
+  if(narration.state === "playing") pauseNarration();
+  else if(narration.state === "paused") resumeNarration();
+  else startNarration();
+});
+$("#narrate-stop-btn").addEventListener("click", () => stopNarration());
+if(supportsSpeech && typeof window.speechSynthesis.onvoiceschanged !== "undefined"){
+  // Voices load asynchronously; nothing to do but let the next utterance use them.
+  window.speechSynthesis.onvoiceschanged = () => {};
+}
+/* ============ MOBILE NAV ============ */
+const menuBtn = $("#menu-btn");
+const mobileNav = $("#mobile-nav");
+let menuOpen = false;
+function syncMenuButton(){
+  if(!menuBtn) return;
+  const label = menuOpen ? dict().a11yMenuClose : dict().a11yMenuOpen;
+  menuBtn.setAttribute("aria-label", label);
+  menuBtn.setAttribute("title", label);
+  menuBtn.setAttribute("aria-expanded", menuOpen ? "true" : "false");
+}
+function setMenu(open){
+  menuOpen = open;
+  mobileNav.classList.toggle("open", open);
+  syncMenuButton();
+}
+menuBtn.addEventListener("click", () => setMenu(!menuOpen));
+mobileNav.querySelectorAll("a").forEach(a => a.addEventListener("click", () => setMenu(false)));
+/* ============ GLOBAL KEYBOARD ============ */
+document.addEventListener("keydown", (e) => {
+  if(e.key !== "Escape") return;
+  if(menuOpen){ setMenu(false); menuBtn.focus(); return; }
+  if(narration.state !== "idle"){ stopNarration(); $("#narrate-btn").focus(); }
+});
+/* Moving focus (not just the viewport) is what makes a skip link work. */
+const skipLink = document.querySelector(".skip-link");
+if(skipLink){
+  skipLink.addEventListener("click", () => {
+    const main = $("#main-content");
+    if(main) setTimeout(() => main.focus(), 0);
+  });
+}
+/* ============ COPY EMAIL ============ */
+document.querySelectorAll(".copy-btn").forEach(btn => {
+  btn.addEventListener("click", async () => {
+    const value = btn.getAttribute("data-copy");
+    try{
+      await navigator.clipboard.writeText(value);
+      btn.textContent = dict().copyDone;
+      btn.classList.add("done");
+      announce(dict().annCopied);
+      setTimeout(() => { btn.textContent = dict().copyLabel; btn.classList.remove("done"); }, 2200);
+    }catch(err){
+      announce(dict().annCopyFail);
+    }
+  });
+});
+/* ============ LEITOR DE E-BOOKS + AUDIOBOOK ============ */
+const reader = {
+  book: null,
+  chapter: 0,
+  opener: null,
+  audio: { state: "idle", queue: [], index: 0, keepAlive: null }
+};
+const readerEls = {
+  overlay: $("#reader-overlay"),
+  dialog: $("#reader-dialog"),
+  level: $("#reader-level"),
+  title: $("#reader-title"),
+  toc: $("#reader-toc-list"),
+  content: $("#reader-content"),
+  progress: $("#reader-progress"),
+  prev: $("#reader-prev"),
+  next: $("#reader-next"),
+  audio: $("#reader-audio"),
+  audioStop: $("#reader-audio-stop"),
+  close: $("#reader-close")
+};
+/* ---- library grid ---- */
+function renderLibrary(){
+  const grid = $("#books-grid");
+  if(!grid || typeof library === "undefined") return;
+  const d = dict();
+  grid.innerHTML = "";
+  library.forEach(book => {
+    const card = document.createElement("button");
+    card.type = "button";
+    card.className = "book-card";
+    card.setAttribute("data-book", book.id);
+    card.setAttribute("aria-label", `${book.title} — ${d[book.levelKey]}, ${book.chapters.length} ${d.bookChapters}, ${book.minutes} ${d.bookMinutes}`);
+    card.innerHTML = `
+      <span class="book-cover">${book.cover}<span class="book-cover-tag">${d[book.levelKey]}</span></span>
+      <span class="book-level mono">${d[book.levelKey]}</span>
+      <h3>${book.title}</h3>
+      <p>${book.blurb}</p>
+      <span class="book-meta mono">${book.chapters.length} ${d.bookChapters} · ${book.minutes} ${d.bookMinutes}</span>`;
+    card.addEventListener("click", () => openReader(book.id, card));
+    grid.appendChild(card);
+  });
+}
+/* ---- open / close ---- */
+function openReader(bookId, opener){
+  const book = library.find(b => b.id === bookId);
+  if(!book) return;
+  if(narration.state !== "idle") stopNarration({ silent: true });
+  reader.book = book;
+  reader.chapter = 0;
+  reader.opener = opener || document.activeElement;
+  readerEls.level.textContent = dict()[book.levelKey];
+  readerEls.title.textContent = book.title;
+  renderTOC();
+  renderChapter(0, { silent: true });
+  readerEls.overlay.classList.add("open");
+  document.body.style.overflow = "hidden";
+  readerEls.close.focus();
+  announce(`${dict().annBookOpen} ${book.title}.`);
+}
+function closeReader(){
+  stopBookAudio({ silent: true });
+  readerEls.overlay.classList.remove("open");
+  document.body.style.overflow = "";
+  if(reader.opener && document.contains(reader.opener)) reader.opener.focus();
+  reader.book = null;
+}
+/* ---- chapters ---- */
+function renderTOC(){
+  const list = readerEls.toc;
+  list.innerHTML = "";
+  reader.book.chapters.forEach((ch, i) => {
+    const li = document.createElement("li");
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.textContent = ch.title;
+    btn.setAttribute("aria-current", i === reader.chapter ? "true" : "false");
+    btn.addEventListener("click", () => renderChapter(i));
+    li.appendChild(btn);
+    list.appendChild(li);
+  });
+}
+function renderChapter(index, opts = {}){
+  const book = reader.book;
+  if(!book || index < 0 || index >= book.chapters.length) return;
+  const wasPlaying = reader.audio.state === "playing";
+  if(reader.audio.state !== "idle" && !opts.keepAudio) stopBookAudio({ silent: true });
+  reader.chapter = index;
+  const ch = book.chapters[index];
+  const d = dict();
+  readerEls.content.innerHTML = "";
+  const h = document.createElement("h3");
+  h.textContent = ch.title;
+  readerEls.content.appendChild(h);
+  // The books are written in Portuguese only — say so instead of pretending.
+  if(currentLang !== "pt"){
+    const note = document.createElement("p");
+    note.className = "reader-note";
+    note.textContent = d.readerLangNote;
+    readerEls.content.appendChild(note);
+  }
+  ch.body.forEach((text, i) => {
+    const para = document.createElement("p");
+    para.textContent = text;
+    para.setAttribute("data-p", i);
+    readerEls.content.appendChild(para);
+  });
+  readerEls.content.scrollTop = 0;
+  readerEls.toc.querySelectorAll("button").forEach((b, i) =>
+    b.setAttribute("aria-current", i === index ? "true" : "false"));
+  readerEls.progress.textContent = d.readerProgress
+    .replace("{c}", index + 1).replace("{t}", book.chapters.length);
+  readerEls.prev.disabled = index === 0;
+  readerEls.next.disabled = index === book.chapters.length - 1;
+  if(!opts.silent) announce(`${d.annChapter} ${ch.title}.`);
+  if(wasPlaying && opts.keepAudio) startBookAudio({ silent: true });
+}
+if(readerEls.overlay){
+  readerEls.prev.addEventListener("click", () => renderChapter(reader.chapter - 1));
+  readerEls.next.addEventListener("click", () => renderChapter(reader.chapter + 1));
+  readerEls.close.addEventListener("click", closeReader);
+  readerEls.overlay.addEventListener("mousedown", (e) => {
+    if(e.target === readerEls.overlay) closeReader();
+  });
+}
+/* ---- audiobook ---- */
+function buildBookQueue(){
+  const ch = reader.book.chapters[reader.chapter];
+  const queue = [];
+  queue.push({ p: -1, text: ch.title });
+  ch.body.forEach((text, i) => {
+    chunkText(text).forEach(piece => queue.push({ p: i, text: piece }));
+  });
+  return queue;
+}
+function highlightParagraph(pIndex){
+  readerEls.content.querySelectorAll("p.reading").forEach(n => n.classList.remove("reading"));
+  if(pIndex < 0) return;
+  const el = readerEls.content.querySelector(`p[data-p="${pIndex}"]`);
+  if(!el) return;
+  el.classList.add("reading");
+  const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  el.scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: "center" });
+}
+function speakBookChunk(){
+  const a = reader.audio;
+  if(a.index >= a.queue.length){
+    // End of chapter: an audiobook should roll into the next one.
+    if(reader.chapter < reader.book.chapters.length - 1){
+      renderChapter(reader.chapter + 1, { silent: true, keepAudio: true });
+      a.queue = buildBookQueue();
+      a.index = 0;
+      speakBookChunk();
+    } else {
+      stopBookAudio();
+      announce(dict().annBookEnd);
+    }
+    return;
+  }
+  const item = a.queue[a.index];
+  const u = new SpeechSynthesisUtterance(speechText(item.text));
+  u.lang = bookLang;                       // content language, not UI language
+  const v = pickVoice(bookLang);
+  if(v) u.voice = v;
+  u.rate = 1;
+  u.onend = () => {
+    if(reader.audio.state !== "playing") return;
+    reader.audio.index += 1;
+    speakBookChunk();
+  };
+  u.onerror = (e) => {
+    if(e.error === "interrupted" || e.error === "canceled") return;
+    stopBookAudio();
+  };
+  highlightParagraph(item.p);
+  window.speechSynthesis.speak(u);
+}
+function startBookAudio(opts = {}){
+  if(!supportsSpeech){ alert(dict().a11yNarrateUnsupported); return; }
+  reader.audio.queue = buildBookQueue();
+  reader.audio.index = 0;
+  reader.audio.state = "playing";
+  window.speechSynthesis.cancel();
+  speakBookChunk();
+  startBookKeepAlive();
+  syncBookAudioButtons();
+  if(!opts.silent) announce(dict().annAudioStart);
+}
+function pauseBookAudio(){
+  window.speechSynthesis.pause();
+  reader.audio.state = "paused";
+  syncBookAudioButtons();
+  announce(dict().annNarratePause);
+}
+function resumeBookAudio(){
+  reader.audio.state = "playing";
+  window.speechSynthesis.resume();
+  syncBookAudioButtons();
+  announce(dict().annNarrateResume);
+}
+function stopBookAudio(opts = {}){
+  const was = reader.audio.state !== "idle";
+  reader.audio.state = "idle";
+  reader.audio.index = 0;
+  reader.audio.queue = [];
+  stopBookKeepAlive();
+  if(supportsSpeech) window.speechSynthesis.cancel();
+  highlightParagraph(-1);
+  syncBookAudioButtons();
+  if(was && !opts.silent) announce(dict().annAudioStop);
+}
+function startBookKeepAlive(){
+  stopBookKeepAlive();
+  reader.audio.keepAlive = setInterval(() => {
+    if(reader.audio.state !== "playing") return;
+    if(window.speechSynthesis.speaking && !window.speechSynthesis.paused){
+      window.speechSynthesis.pause();
+      window.speechSynthesis.resume();
+    }
+  }, 9000);
+}
+function stopBookKeepAlive(){
+  if(reader.audio.keepAlive){ clearInterval(reader.audio.keepAlive); reader.audio.keepAlive = null; }
+}
+function syncBookAudioButtons(){
+  if(!readerEls.audio) return;
+  const d = dict();
+  const playing = reader.audio.state === "playing";
+  const active = reader.audio.state !== "idle";
+  const label = playing ? d.readerAudioPause : (active ? d.readerAudioResume : d.readerAudioPlay);
+  readerEls.audio.setAttribute("aria-pressed", active ? "true" : "false");
+  readerEls.audio.setAttribute("aria-label", label);
+  readerEls.audio.querySelector(".txt").textContent = label;
+  readerEls.audioStop.hidden = !active;
+}
+if(readerEls.audio){
+  readerEls.audio.addEventListener("click", () => {
+    if(reader.audio.state === "playing") pauseBookAudio();
+    else if(reader.audio.state === "paused") resumeBookAudio();
+    else startBookAudio();
+  });
+  readerEls.audioStop.addEventListener("click", () => stopBookAudio());
+}
+/* ---- dialog keyboard behaviour ---- */
+if(readerEls.dialog) readerEls.dialog.addEventListener("keydown", (e) => {
+  if(e.key === "Escape"){ e.stopPropagation(); closeReader(); return; }
+  if(e.key !== "Tab") return;
+  const focusables = readerEls.dialog.querySelectorAll(
+    'button:not([disabled]):not([hidden]), [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+  if(!focusables.length) return;
+  const first = focusables[0], last = focusables[focusables.length - 1];
+  if(e.shiftKey && document.activeElement === first){ e.preventDefault(); last.focus(); }
+  else if(!e.shiftKey && document.activeElement === last){ e.preventDefault(); first.focus(); }
+});
+/* ============ ABAS DE CASES ============
+   Padrão WAI-ARIA: setas navegam, Home/End vão às pontas, e a aba ativa
+   entra no hash da URL para o link ser compartilhável. */
+const tablist = $(".tablist");
+if(tablist){
+  const tabs = Array.from(tablist.querySelectorAll('[role="tab"]'));
+  const panels = tabs.map(t => document.getElementById(t.getAttribute("aria-controls")));
+
+  function selectTab(i, opts = {}){
+    tabs.forEach((t, j) => {
+      const on = i === j;
+      t.setAttribute("aria-selected", on ? "true" : "false");
+      t.tabIndex = on ? 0 : -1;
+      panels[j].hidden = !on;
+    });
+    if(opts.focus) tabs[i].focus();
+    const id = tabs[i].getAttribute("data-tab");
+    if(!opts.silent){
+      history.replaceState(null, "", "#" + id);
+      announce(dict().annTab + " " + tabs[i].querySelector("span").textContent);
+    }
+    // Trocar de aba com a narração ligada leria conteúdo escondido.
+    if(narration.state !== "idle") stopNarration({ silent: true });
+  }
+
+  tabs.forEach((t, i) => {
+    t.addEventListener("click", () => selectTab(i));
+    t.addEventListener("keydown", (e) => {
+      let n = null;
+      if(e.key === "ArrowRight" || e.key === "ArrowDown") n = (i + 1) % tabs.length;
+      else if(e.key === "ArrowLeft" || e.key === "ArrowUp") n = (i - 1 + tabs.length) % tabs.length;
+      else if(e.key === "Home") n = 0;
+      else if(e.key === "End") n = tabs.length - 1;
+      if(n === null) return;
+      e.preventDefault();
+      selectTab(n, { focus: true });
+    });
+  });
+
+  const fromHash = tabs.findIndex(t => "#" + t.getAttribute("data-tab") === location.hash);
+  selectTab(fromHash >= 0 ? fromHash : 0, { silent: true });
+}
+
+/* ============ LIGHTBOX DE GALERIA ============
+   Progressive enhancement: sem JS cada miniatura é um link direto
+   para a imagem em tamanho real. Com JS, vira uma galeria navegável. */
+const lightbox = {
+  items: [],
+  index: 0,
+  opener: null,
+  el: $("#lightbox")
+};
+function collectGallery(name){
+  return Array.from(document.querySelectorAll(`[data-gallery="${name}"]`)).map(a => ({
+    href: a.getAttribute("href"),
+    caption: a.querySelector("img") ? a.querySelector("img").getAttribute("alt") : "",
+    group: dict()[a.getAttribute("data-group-key")] || "",
+    node: a
+  }));
+}
+function preloadNeighbours(){
+  [-1, 1].forEach(offset => {
+    const i = (lightbox.index + offset + lightbox.items.length) % lightbox.items.length;
+    const img = new Image();
+    img.src = lightbox.items[i].href;
+  });
+}
+function showLightboxItem(i){
+  const total = lightbox.items.length;
+  lightbox.index = (i + total) % total;
+  const item = lightbox.items[lightbox.index];
+  const d = dict();
+  const img = $("#lightbox-img");
+  img.style.opacity = "0";
+  img.src = item.href;
+  img.alt = item.caption;
+  img.onload = () => { img.style.opacity = "1"; };
+  $("#lightbox-caption").textContent = item.caption;
+  $("#lightbox-group").textContent = item.group;
+  $("#lightbox-counter").textContent = `${lightbox.index + 1} / ${total}`;
+  $("#lightbox-open").href = item.href;
+  const nav = total > 1;
+  $("#lightbox-prev").hidden = !nav;
+  $("#lightbox-next").hidden = !nav;
+  // Thumbnail rail keeps the position visible while browsing.
+  const rail = $("#lightbox-rail");
+  rail.querySelectorAll("button").forEach((b, bi) => {
+    const active = bi === lightbox.index;
+    b.setAttribute("aria-current", active ? "true" : "false");
+    if(active) b.scrollIntoView({ block: "nearest", inline: "center" });
+  });
+  announce(`${d.lightboxOf.replace("{c}", lightbox.index + 1).replace("{t}", total)} ${item.caption}`);
+  preloadNeighbours();
+}
+function buildRail(){
+  const rail = $("#lightbox-rail");
+  rail.innerHTML = "";
+  if(lightbox.items.length < 2){ rail.hidden = true; return; }
+  rail.hidden = false;
+  lightbox.items.forEach((item, i) => {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.setAttribute("aria-label", item.caption);
+    const thumb = item.node.querySelector("img");
+    b.innerHTML = `<img src="${thumb ? thumb.getAttribute("src") : item.href}" alt="" loading="lazy">`;
+    b.addEventListener("click", () => showLightboxItem(i));
+    rail.appendChild(b);
+  });
+}
+function openLightbox(name, index, opener){
+  lightbox.items = collectGallery(name);
+  if(!lightbox.items.length) return;
+  lightbox.opener = opener || document.activeElement;
+  if(narration.state !== "idle") stopNarration({ silent: true });
+  buildRail();
+  showLightboxItem(index);
+  lightbox.el.classList.add("open");
+  document.body.style.overflow = "hidden";
+  $("#lightbox-close").focus();
+}
+function closeLightbox(){
+  lightbox.el.classList.remove("open");
+  document.body.style.overflow = "";
+  $("#lightbox-img").src = "";
+  if(lightbox.opener && document.contains(lightbox.opener)) lightbox.opener.focus();
+}
+if(lightbox.el){
+  document.querySelectorAll("[data-gallery]").forEach(link => {
+    link.addEventListener("click", (e) => {
+      e.preventDefault();
+      const name = link.getAttribute("data-gallery");
+      const items = collectGallery(name);
+      openLightbox(name, items.findIndex(it => it.node === link), link);
+    });
+  });
+  $("#lightbox-prev").addEventListener("click", () => showLightboxItem(lightbox.index - 1));
+  $("#lightbox-next").addEventListener("click", () => showLightboxItem(lightbox.index + 1));
+  $("#lightbox-close").addEventListener("click", closeLightbox);
+  lightbox.el.addEventListener("mousedown", (e) => {
+    if(e.target === lightbox.el || e.target.id === "lightbox-stage") closeLightbox();
+  });
+  lightbox.el.addEventListener("keydown", (e) => {
+    if(e.key === "Escape"){ e.stopPropagation(); closeLightbox(); return; }
+    if(e.key === "ArrowLeft"){ e.preventDefault(); showLightboxItem(lightbox.index - 1); return; }
+    if(e.key === "ArrowRight"){ e.preventDefault(); showLightboxItem(lightbox.index + 1); return; }
+    if(e.key === "Home"){ e.preventDefault(); showLightboxItem(0); return; }
+    if(e.key === "End"){ e.preventDefault(); showLightboxItem(lightbox.items.length - 1); return; }
+    if(e.key !== "Tab") return;
+    const f = lightbox.el.querySelectorAll('button:not([hidden]), a[href]');
+    if(!f.length) return;
+    const first = f[0], last = f[f.length - 1];
+    if(e.shiftKey && document.activeElement === first){ e.preventDefault(); last.focus(); }
+    else if(!e.shiftKey && document.activeElement === last){ e.preventDefault(); first.focus(); }
+  });
+  // Swipe on touch devices
+  let touchX = null;
+  const stage = $("#lightbox-stage");
+  stage.addEventListener("touchstart", (e) => { touchX = e.changedTouches[0].clientX; }, { passive: true });
+  stage.addEventListener("touchend", (e) => {
+    if(touchX === null) return;
+    const dx = e.changedTouches[0].clientX - touchX;
+    if(Math.abs(dx) > 45) showLightboxItem(lightbox.index + (dx < 0 ? 1 : -1));
+    touchX = null;
+  }, { passive: true });
+}
+/* ============ SCROLL REVEAL ============ */
+const revealEls = document.querySelectorAll('.reveal');
+const io = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if(e.isIntersecting){
+      e.target.classList.add('in');
+      io.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.12 });
+revealEls.forEach(el => io.observe(el));
+/* ============ TERMINAL TYPEWRITER ============ */
+let typewriterTimer = null;
+function restartTerminalTypewriter(){
+  if(typewriterTimer) clearTimeout(typewriterTimer);
+  const lines = document.querySelectorAll('#receipt .line');
+  const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if(reduced){
+    lines.forEach(l => { l.style.transition = 'none'; l.style.opacity = '1'; });
+    return;
+  }
+  lines.forEach(l => { l.style.transition = 'none'; l.style.opacity = '0'; });
+  let i = 0;
+  function revealLine(){
+    if(i >= lines.length) return;
+    lines[i].style.transition = 'opacity .25s ease';
+    lines[i].style.opacity = '1';
+    i++;
+    typewriterTimer = setTimeout(revealLine, 70);
+  }
+  typewriterTimer = setTimeout(revealLine, 200);
+}
+/* ============ INIT ============ */
+document.addEventListener('DOMContentLoaded', () => {
+  const savedLang = localStorage.getItem(STORAGE_KEY);
+  const initialLang = supportedLangs.includes(savedLang) ? savedLang : "pt";
+  // The inline boot script in <head> already applied these before first paint;
+  // here we only bring the internal state and the buttons in line with it.
+  highContrastOn = document.documentElement.classList.contains("high-contrast");
+  lightModeOn = document.documentElement.classList.contains("light");
+  largeTextOn = localStorage.getItem(TEXTSIZE_KEY) === "1";
+  applyLanguage(initialLang, { silent: true });
+});
+window.addEventListener('beforeunload', () => {
+  if(supportsSpeech) window.speechSynthesis.cancel();
+});
+
+</script>
+</body>
+</html>
